@@ -64,8 +64,9 @@ Tokens: `background, foreground, muted, muted-foreground, border, card, card-for
 accent-foreground, signal, destructive, ring`.
 
 - `destructive` is only for form validation / failure messages (AA on `background` and `card`).
-- **Light** (editorial, warm): warm off-white paper, near-black ink, warm grays, restrained blue accent.
-- **Dark** (technical, premium): near-black, off-white text, cool grays, restrained blue accent, cyan `signal` used sparingly.
+- **Light** (editorial, warm): warm off-white paper, near-black ink, warm grays, muted gold accent (`#7A6526`, the AA-safe shade of brand gold `#BAA35F`).
+- **Dark** (technical, premium): near-black, `#E6E6E6` text, cool grays, brand gold accent (`#BAA35F`), cyan `signal` used sparingly.
+- Brand palette: primary gold `#BAA35F`, secondary `#E6E6E6`. The logo kit (§6) keeps its own colors.
 - `signal` (cyan) is only for "live"/AI moments (token highlights, status dots). Glow is rare and subtle.
 
 Light is designed on its own — never an inversion of dark.
@@ -117,8 +118,12 @@ Writing = what I think about. Research pages must look visually different (lab/n
 ## 8. Homepage structure (in order)
 
 1. Hero 2. Currently 3. Selected Portfolio 4. Research 5. Research Visualization 6. Services 7. Skills
-8. Experience / Proof 9. About preview 10. Contact CTA 11. Footer.
+8. Experience / Proof 9. About preview 10. Contact CTA 11. Signal band 12. Footer.
 Homepage is not a resume — details live on dedicated pages.
+Signal band (`components/signal/`): decorative prelude to the footer — the hero signature told as a signal. A small
+patch-grid image is scanned into visual tokens that converge, fan out into interweaving strands (reasoning;
+`signal` → `accent` gradient) and land on the words of the statement. Visual is `aria-hidden`; the caption is
+its text equivalent. No section number.
 
 Visitor timeline: 5s who · 15s what I work on · 30s what I built · 60s what I research · 90s why engineering matters.
 
@@ -139,6 +144,7 @@ components/
   hero/  work/  research/  services/  skills/  about/  contact/
   animations/   reusable Motion wrappers (reveal, stagger, magnetic) — client leaves only
   intro/        first-load intro overlay (server markup) + its inline gating script
+  signal/       homepage signal band (server wrapper + client SVG strands)
   three/        ALL Three.js / R3F code, isolated, lazy-loaded
   providers/    theme-provider, motion-provider (MotionConfig reducedMotion="user")
   ui/           shadcn-style primitives (button, tag) using cn + cva; social-icon (inline Simple Icons
@@ -172,6 +178,10 @@ No JS → no overlay. Never lengthen it, never add a spinner or percentage count
 toward the cursor (≤8px, ≤3° tilt, 1.04 scale) and settles back on leave. Mouse pointers only (touch/pen ignored),
 off under reduced motion, motion values only (no re-renders). Used on: hero CTAs, contact CTA, desktop theme
 toggle, Back-to-Top. Small intentional targets only — never nav text links or cards.
+
+**Signal band.** `components/signal/signal-waves.tsx`: CSS keyframes (one-time patchify, strand draw-in and word
+reveal, a few travelling highlights) plus a small rAF loop that writes attributes directly (no re-renders): strand
+drift, the scan cursor, tokens flowing out of the image, and the active output word. Paused offscreen / in hidden tabs; static first frame under reduced motion. Not a GSAP or WebGL case.
 
 Timing: UI transitions 200–500ms; easing token `--ease-out-expo` / Motion `[0.16, 1, 0.3, 1]`.
 Never animate every element. Every animation respects `prefers-reduced-motion` (use `useReducedMotion`;

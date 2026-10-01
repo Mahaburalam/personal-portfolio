@@ -5,6 +5,7 @@ import { Currently } from "@/components/hero/currently";
 import { Hero } from "@/components/hero/hero";
 import { ResearchPreview } from "@/components/research/research-preview";
 import { ResearchVisualizationSection } from "@/components/research/research-visualization-section";
+import { SignalBand } from "@/components/signal/signal-band";
 import { ServicesPreview } from "@/components/services/services-preview";
 import { SkillsPreview } from "@/components/skills/skills-preview";
 import { SelectedWork } from "@/components/work/selected-work";
@@ -23,6 +24,7 @@ export default function HomePage() {
       <ExperienceProof />
       <AboutPreview />
       <ContactCta />
+      <SignalBand />
     </>
   );
 }

@@ -7,7 +7,7 @@
 /* Design tokens — the only place raw colors are allowed (CLAUDE.md §4) */
 /* ------------------------------------------------------------------ */
 
-/* Light — editorial: warm paper, ink, restrained blue */
+/* Light — editorial: warm paper, ink, muted gold (AA-safe shade of #baa35f) */
 :root {
   --background: #f6f4ef;
   --foreground: #141414;
@@ -16,30 +16,30 @@
   --border: #dcd8ce;
   --card: #fbfaf7;
   --card-foreground: #141414;
-  --accent: #1d5fd6;
+  --accent: #7a6526;
   --accent-foreground: #ffffff;
   --signal: #0e8f9a;
   --destructive: #b42318;
-  --ring: #1d5fd6;
+  --ring: #7a6526;
 
   --radius: 0.375rem;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark — technical: near-black, off-white, cool grays, sparing cyan */
+/* Dark — technical: near-black, #e6e6e6 text, brand gold, sparing cyan */
 .dark {
   --background: #0a0b0d;
-  --foreground: #ededea;
+  --foreground: #e6e6e6;
   --muted: #15171a;
   --muted-foreground: #8b8f96;
   --border: #22252a;
   --card: #0f1114;
-  --card-foreground: #ededea;
-  --accent: #5aa9ff;
+  --card-foreground: #e6e6e6;
+  --accent: #baa35f;
   --accent-foreground: #0a0b0d;
   --signal: #3fd0d4;
   --destructive: #f97066;
-  --ring: #5aa9ff;
+  --ring: #baa35f;
 }
 
 @theme inline {
@@ -166,6 +166,117 @@
 /* Don't let the body color fade fight the reveal snapshot */
 .theme-switching body {
   transition: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Signal band (components/signal, CLAUDE.md §10). Strands use         */
+/* pathLength="1". Without JS (or under reduced motion) the wrapper    */
+/* never gets data-signal, so everything stays visible and static.     */
+/* ------------------------------------------------------------------ */
+/* Image → patches: the grid starts as one picture (no gaps), then splits into patches */
+[data-signal="armed"] .signal-patch {
+  transform: scale(1.14);
+}
+
+.signal-patch,
+.signal-word {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+[data-signal="play"] .signal-patch {
+  animation: signal-patch 600ms var(--ease-out-expo) calc(var(--i) * 8ms) both;
+}
+
+/* Scan cursor only exists while the loop runs */
+.signal-cursor {
+  opacity: 0;
+}
+
+[data-signal="play"] .signal-cursor {
+  opacity: 1;
+}
+
+/* Output words: revealed after the strands land, then one at a time is "decoded" */
+[data-signal="armed"] .signal-word {
+  opacity: 0;
+}
+
+[data-signal="play"] .signal-word {
+  transition: fill 300ms ease;
+  animation: signal-word 500ms var(--ease-out-expo) calc(1.3s + var(--i) * 120ms) both;
+}
+
+.signal-word[data-active] {
+  fill: var(--foreground);
+}
+
+[data-signal="armed"] .signal-strand {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+[data-signal="armed"] .signal-dot {
+  opacity: 0;
+}
+
+[data-signal="play"] .signal-strand {
+  stroke-dasharray: 1;
+  animation: signal-draw 1.6s var(--ease-out-expo) calc(var(--i) * 45ms) both;
+}
+
+[data-signal="play"] .signal-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: signal-dot 500ms var(--ease-out-expo) calc(0.7s + var(--i) * 45ms) both;
+}
+
+/* A short dash travels each highlighted strand, then waits off-path before looping */
+.signal-pulse {
+  stroke-dasharray: 0.06 1.5;
+  stroke-dashoffset: 0.06;
+}
+
+[data-signal="play"] .signal-pulse {
+  animation: signal-pulse var(--dur) linear calc(1.4s + var(--delay)) infinite;
+}
+
+@keyframes signal-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes signal-patch {
+  from {
+    transform: scale(1.14);
+  }
+}
+
+@keyframes signal-word {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+@keyframes signal-dot {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes signal-pulse {
+  from {
+    stroke-dashoffset: 0.06;
+  }
+  to {
+    stroke-dashoffset: -1.5;
+  }
 }
 
 /* ------------------------------------------------------------------ */
