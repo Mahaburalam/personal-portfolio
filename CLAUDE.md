@@ -82,8 +82,16 @@ sun/moon icon swap; instant when the API is unsupported or reduced motion is on.
 
 ## 6. Navigation
 
-Desktop: bracket-monogram logo `[MA·]` (`components/navigation/logo.tsx`, inline SVG, theme tokens,
-links home, `aria-label` with the full name) left; right: `WORK  RESEARCH  SERVICE  SKILL  ABOUT  CONTACT  ◐`.
+Desktop: logo left (links home, `aria-label` with the full name); right: `WORK  RESEARCH  SERVICE  SKILL  ABOUT  CONTACT  ◐`.
+
+**Brand mark — "Shared Apex" MA** (`components/navigation/logo.tsx`, inline outlined SVG, theme tokens):
+the M's last stroke is also the A's left leg (one unified symbol, not "M" next to "A"). Code reference: the A's
+crossbar is a detached underscore cursor `_`. AI reference: the M's stem stands on a square **token patch**
+(`signal`; same ink in monochrome) — the hero's IMAGE → PATCHES → TOKENS idea. Geometry: 48-unit grid,
+stroke 6, cap 8, baseline 40, filled outline paths (no strokes, no font text). A heavier ≤24px optical variant
+joins the crossbar (favicon `app/icon.svg`, `app/favicon.ico`, `app/apple-icon.png`). Header shows mark +
+"Mahabur Alam" (Sora). Brand kit (symbol / primary / horizontal / stacked × light / dark / color, avatars) lives
+in `public/brand/`; never redraw the mark ad hoc — reuse those paths. Do not add other symbols to it.
 Nav items are 13px mono uppercase (`font-mono` uppercase, tracking 0.12em). Active route shows an animated indicator (Motion `layoutId`). Minimal — do not add items.
 Mobile: name + menu button → full-screen Motion overlay with the same links + theme toggle. Esc closes,
 focus is trapped while open and returned to the button on close, body scroll locked.
@@ -130,6 +138,7 @@ components/
   site-footer.tsx
 lib/            utils.ts (cn), site.ts (profile, nav, links), motion.ts (easeOutExpo, durations)
 content/        projects/ research/ services/ skills/ experience/ (typed data + MDX long-form)
+public/brand/   logo kit (SVG lockups with outlined text, PNG avatars) — see §6
 ```
 Content is currently flat typed TS (`content/*.ts`, incl. `research-visualization.ts` for the homepage
 schematic); it moves into folders when MDX arrives in Phase 4. Research surfaces use the `.bg-grid`

@@ -67,6 +67,17 @@
   --ease-out-expo: var(--ease-out-expo);
 }
 
+@theme {
+  /* Logo hover: the A's crossbar blinks like a terminal cursor */
+  --animate-cursor-blink: cursor-blink 0.9s steps(1, end) 2;
+
+  @keyframes cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
 @layer base {
   * {
     border-color: var(--border);

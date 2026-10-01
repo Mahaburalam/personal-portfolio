@@ -1,30 +1,32 @@
+import { profile } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+/* "Shared Apex" MA mark — same outlined paths as public/brand/ma-symbol.svg (CLAUDE.md §6). */
+const LETTERS =
+  "M2.89 8L8.89 8L8.89 32.2L2.89 32.2ZM9.22 8L17.09 31.24L26.17 8L32.61 8L45.11 40L38.67 40L29.39 16.25L20.11 40L13.72 40L2.89 8Z";
+const CURSOR = "M25.75 31.2h7.28v3.6h-7.28Z";
+const TOKEN = "M2.89 34h6v6h-6Z";
+
+/** The MA symbol alone. Ink uses currentColor; the token patch uses `signal`. Decorative. */
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="2.89 8 42.22 32" aria-hidden className={cn("h-5.5 w-auto shrink-0", className)}>
+      <path d={LETTERS} fill="currentColor" />
+      <path d={CURSOR} fill="currentColor" className="group-hover:animate-cursor-blink" />
+      <path d={TOKEN} className="fill-signal" />
+    </svg>
+  );
+}
+
 /**
- * Bracket monogram `[MA·]`. Letters and brackets use currentColor; the token dot uses `signal`.
- * Decorative — the wrapping link carries the accessible name. Hover reacts to a parent `.group`.
+ * Mark + name. Decorative — the wrapping link carries the accessible name.
+ * Hover (parent `.group`) blinks the A's cursor bar.
  */
 export function Logo({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 48 32" aria-hidden className={cn("h-8 w-12 overflow-visible", className)}>
-      <path
-        d="M7 1H1v6M41 1h6v6M1 25v6h6M47 25v6h-6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.25"
-        vectorEffect="non-scaling-stroke"
-        className="origin-center opacity-50 transition-[opacity,scale] duration-300 ease-out-expo transform-view group-hover:scale-[1.08] group-hover:opacity-100"
-      />
-      <text
-        x="22.5"
-        y="21.5"
-        textAnchor="middle"
-        fill="currentColor"
-        className="font-display text-[15px] font-semibold tracking-tight"
-      >
-        MA
-      </text>
-      <rect x="36" y="18.5" width="3" height="3" className="fill-signal" />
-    </svg>
+    <span aria-hidden className={cn("inline-flex items-center gap-2.5", className)}>
+      <LogoMark />
+      <span className="font-display text-[15px] font-semibold tracking-tight">{profile.name}</span>
+    </span>
   );
 }

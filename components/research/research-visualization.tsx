@@ -88,7 +88,8 @@ function PatchGrid({ look }: { look: (i: number) => PatchLook }) {
               toneClass[tone],
             )}
             style={{
-              opacity,
+              // Rounded so server and client serialize the same string (float noise breaks hydration).
+              opacity: Math.round(opacity * 1000) / 1000,
               transitionDelay: `${((i % GRID) + Math.floor(i / GRID)) * 12}ms`,
             }}
           />
