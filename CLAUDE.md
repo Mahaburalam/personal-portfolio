@@ -74,11 +74,14 @@ Light is designed on its own — never an inversion of dark.
 
 `next-themes`, `attribute="class"`, `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`
 is **off**; instead a fast (150ms) color transition is applied to `body`. Supports Dark / Light / System.
-Toggle cycles light → dark → system and shows the current mode. `<html suppressHydrationWarning>`.
+Toggle flips the *visible* theme on every click (light ↔ dark) and shows the resolved mode; when the
+chosen theme matches the OS preference it stores `system` instead, so System stays supported without
+"dead" clicks (the old light → dark → system cycle often produced no visible change). `<html suppressHydrationWarning>`.
 
 ## 6. Navigation
 
-Desktop: `MAHABUR ALAM` left; right: `WORK  RESEARCH  SERVICE  SKILL  ABOUT  CONTACT  ◐`.
+Desktop: bracket-monogram logo `[MA·]` (`components/navigation/logo.tsx`, inline SVG, theme tokens,
+links home, `aria-label` with the full name) left; right: `WORK  RESEARCH  SERVICE  SKILL  ABOUT  CONTACT  ◐`.
 Active route shows an animated indicator (Motion `layoutId`). Minimal — do not add items.
 Mobile: name + menu button → full-screen Motion overlay with the same links + theme toggle. Esc closes,
 focus is trapped while open and returned to the button on close, body scroll locked.

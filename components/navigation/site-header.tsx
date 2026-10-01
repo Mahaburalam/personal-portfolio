@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
+import { profile } from "@/lib/site";
+import { Logo } from "./logo";
 import { MobileMenu } from "./mobile-menu";
 import { NavLinks } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
@@ -8,8 +10,12 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
       <Container className="flex h-16 items-center justify-between">
-        <Link href="/" className="font-display text-sm font-semibold tracking-[0.18em] uppercase">
-          Mahabur Alam
+        <Link
+          href="/"
+          aria-label={`${profile.name} — home`}
+          className="group -ml-1 inline-flex h-11 items-center px-1"
+        >
+          <Logo />
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center lg:flex">
