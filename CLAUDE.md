@@ -66,12 +66,13 @@ accent-foreground, signal, spectrum-start, spectrum-end, destructive, ring`.
 - `destructive` is only for form validation / failure messages (AA on `background` and `card`).
 - **Light** (editorial, clean): neutral cool off-white, white cards, near-black ink, cool grays, muted gold accent (`#7A6526`, the AA-safe shade of brand gold `#BAA35F`).
 - **Dark** (technical, premium): navy-black, `#E6E6E6` text, cool grays, brand gold accent (`#BAA35F`), cyan `signal` used sparingly.
-- `spectrum-start` → `spectrum-end` (blue → violet) is the AI/visual-token color (owner's homepage mockup): the hero
-  headline word (`.text-spectrum`), hero/research visuals, generated card covers. Never for body text, buttons or
+- `spectrum-start` → `spectrum-end` (blue → violet) is the AI/visual-token color (owner's homepage mockup): hero/research
+  visuals, generated card covers, small AI emphasis (`.text-spectrum`, e.g. the Path section's last stage). Never for body text, buttons or
   UI states — gold `accent` keeps interactive states (nav indicator, ring, hover). `.text-spectrum` / `.bg-spectrum`
   are registered in `cn`.
 - Brand palette: primary gold `#BAA35F`, secondary `#E6E6E6`. The logo kit (§6) keeps its own colors.
-- `signal` (cyan) is only for "live"/AI moments (token highlights, status dots). Glow is rare and subtle.
+- `signal` (cyan) is only for "live"/AI moments (token highlights, status dots). Glow is rare and subtle — the one
+  owner-approved exception is the hero canvas (dark theme bloom, per the mockup).
 
 Light is designed on its own — never an inversion of dark.
 
@@ -124,7 +125,8 @@ Writing = what I think about. Research pages must look visually different (lab/n
 1. Hero 2. Selected Work 3. Research Lab 4. Research Visualization 5. Currently Exploring 6. Services 7. Skills
 8. Experience / Proof 9. About preview 10. Contact CTA 11. Signal band 12. Footer.
 Homepage sections use `SectionHeader variant="rail"`: a stacked heading column (label, h2, intro, arrow link) left
-of the content (owner's mockup). Inner pages keep the default 3|9 `split`.
+of the content (owner's mockup). Inner pages keep the default 3|9 `split`. Exception: the Lab notebook
+(Research Visualization) keeps the `split` header with the full-width schematic below — owner preferred it.
 Homepage is not a resume — details live on dedicated pages.
 Signal band (`components/signal/`): decorative prelude to the footer — the hero signature told as a signal. A small
 patch-grid image is scanned into visual tokens that converge, fan out into interweaving strands (reasoning;
@@ -134,15 +136,16 @@ its text equivalent. No section number.
 Visitor timeline: 5s who · 15s what I work on · 30s what I built · 60s what I research · 90s why engineering matters.
 
 ### Hero
-Eyebrow role (`AI RESEARCHER & ENGINEER`), h1 = statement with "intelligent" in `.text-spectrum` (the name is an
-`sr-only` prefix of the h1; it is visible in the header), supporting line, CTAs `Explore Work →` (/work) and
-`Research →` (/research), labels `COMPUTER VISION · VLMs · MULTIMODAL AI · AI SYSTEMS · SOFTWARE ENGINEERING`
-(`heroLabels`), status line with a live `signal` dot: "Currently: Senior Software Engineer | Research focus: …".
-Visual signature: **IMAGE → PATCHES → VISUAL TOKENS → REASONING → OUTPUT**, drawn as a CSS-3D perspective stack of
-panels (`components/hero/hero-signature.tsx`): image (procedural SVG scene, or `heroVisual.image` when the owner
-supplies a photo) → patch grid → token grids → reasoning stream → output dot cloud. Never a generic sphere, brain,
-galaxy, robot or neural-net animation. Desktop: text | visual. Mobile: text, then a flatter 3-panel version in a card.
-This DOM/SVG version is permanent and is the fallback for the WebGL version.
+Name, role, statement, supporting line, CTAs `Explore Portfolio →` (/work) and `Research →` (/research),
+labels `COMPUTER VISION · VLMs · MULTIMODAL AI · AI SYSTEMS`, meta "Currently: Senior Software Engineer",
+"Research focus: Efficient & Adaptive Vision-Language Systems" (owner kept this text column over the mockup's).
+Visual signature: **IMAGE → PATCHES → VISUAL TOKENS → REASONING → OUTPUT**, matched to the owner's mockup: glass
+panels turned away from the viewer — a real street photo (`public/hero/street.jpg`, CC0, set in `content/hero.ts`),
+token panels *sampled from that photo*, a cyan reasoning panel, a token beam and a violet output point cloud.
+Rendered on a 2D canvas (`hero-scene.ts` = pure drawing in a virtual 1000×440 space with per-panel perspective;
+`hero-canvas.tsx` = lifecycle). Never a generic sphere, brain, galaxy, robot or neural-net animation. The canvas is
+`aria-hidden`; the figcaption (stage labels + sr-only sentence) is the text equivalent and works without JS.
+This canvas version is the permanent fallback for a future WebGL version.
 
 ### Selected Work / Research Lab / Currently Exploring
 Work: 3 boxed tiles (cover, category chip, title, summary, tags, meta, "View case →"). Covers are `next/image` when
@@ -175,6 +178,11 @@ components/
 lib/            utils.ts (cn), site.ts (profile, nav, links), motion.ts (easeOutExpo, durations)
 content/        projects/ research/ services/ skills/ experience/ about/ credentials/ (typed data + MDX long-form)
 public/brand/   logo kit (SVG lockups with outlined text, PNG avatars) — see §6
+public/hero/pipeline/  standalone pipeline visual (owner's mockup: Image → Visual Tokens → Reasoning →
+                Intelligent Output), dark + light: static SVG, PNG (1080p + 4K), CSS-animated SVG, Lottie
+                (markers `intro` 0–45f once, `loop` 45–225f seamless). Generated — never hand-edit; run
+                `pnpm gen:pipeline` (scripts/pipeline-visual/, no deps; PNGs via headless Chrome). Brand/marketing
+                assets only: NOT used by the hero, whose DOM signature (§8) stays canonical.
 ```
 Content is currently flat typed TS (`content/*.ts`, incl. `research-visualization.ts` for the homepage
 schematic); it moves into folders when MDX arrives in Phase 4. Research surfaces use the `.bg-grid`
@@ -208,6 +216,12 @@ The page emits `ProfilePage` → `Person` JSON-LD from verified fields only.
 3. **GSAP + ScrollTrigger** — ONLY for pinned sections, multi-stage scroll storytelling, synchronized timelines.
    Not installed yet; add only when a specific section proves Motion insufficient, and note why here.
 4. **Three.js + R3F + Drei** — ONLY for the hero visual and possibly research visualization. Not installed until Phase 12.
+
+**Hero canvas.** `components/hero/hero-canvas.tsx`: static panels/photo/tiles render once per size + theme into an
+offscreen layer (blur bloom in dark only); a rAF loop adds token twinkles, a scan line, reasoning dots, the beam and
+the turning output cloud. Waits for the intro to finish, reveals left → right (1.4s), pauses offscreen, 30 fps and half
+the particles under 640px, one still frame under reduced motion. Colours are read from the CSS tokens and re-read
+when the theme class changes. Plain canvas 2D — not a Three.js case (§11 stays for a future WebGL version).
 
 **Intro (first load).** `components/intro/`: a typographic overlay — MA mark wipes up, `MAHABUR ALAM` letters
 slide up through masks, role line fades in, a hairline draws as quiet progress, then the overlay wipes upward
@@ -257,7 +271,7 @@ reduced motion support. Decorative visuals are `aria-hidden` with a text equival
 ## 14. Performance
 
 Server Components by default; `"use client"` only at leaf components. Lazy-load WebGL and heavy animation.
-`next/image` for all images. No unnecessary deps. Static fallbacks. Never trade performance for effects.
+`next/image` for all images (exception: the hero canvas reads its photo directly — keep it ≤100 KB). No unnecessary deps. Static fallbacks. Never trade performance for effects.
 
 ## 15. SEO
 

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "gen:pipeline": "node scripts/pipeline-visual/generate.mjs && bash scripts/pipeline-visual/render-png.sh"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

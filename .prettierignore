@@ -1,3 +1,6 @@
 pnpm-lock.yaml
 # Hand-formatted docs; Prettier breaks CLAUDE.md numbered lists.
 *.md
+# Generated pipeline visual (scripts/pipeline-visual/)
+public/hero/pipeline/
+scripts/pipeline-visual/label-glyphs.json
