@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion, useSpring } from "motion/react";
+import { motion, useSpring } from "motion/react";
 import type { PointerEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 type MagneticProps = {
   children: ReactNode;

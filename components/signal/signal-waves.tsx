@@ -1,8 +1,8 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from "react";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /**
  * Homepage signal band — the hero signature told as a signal (CLAUDE.md §8, §10):
@@ -167,7 +167,12 @@ export function SignalWaves({
   useEffect(() => {
     const root = rootRef.current;
     const svg = svgRef.current;
-    if (reduce || !root || !svg) return;
+    if (!root || !svg) return;
+    // The first (hydration) pass reports motion as allowed; undo any arming once the real value lands.
+    if (reduce) {
+      delete root.dataset.signal;
+      return;
+    }
 
     if (root.dataset.signal !== "play") root.dataset.signal = "armed";
     const paths = svg.querySelectorAll<SVGPathElement>("[data-strand]");

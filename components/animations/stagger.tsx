@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 import { duration, easeOutExpo } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 const containers = { div: motion.div, ul: motion.ul, ol: motion.ol } as const;
 const items = { div: motion.div, li: motion.li } as const;

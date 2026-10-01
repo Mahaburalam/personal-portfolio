@@ -1,8 +1,9 @@
 import { Stagger, StaggerItem } from "@/components/animations/stagger";
 import { Section } from "@/components/layout/section";
 import { SectionHeader } from "@/components/layout/section-header";
-import { skillGroups, skillsCopy } from "@/content/skills";
+import { skillCategories, skillsCopy } from "@/content/skills";
 
+/** Homepage teaser (CLAUDE.md §8): categories + a few skills each; the full ecosystem is /skills. */
 export function SkillsPreview() {
   return (
     <Section aria-labelledby="skills-title">
@@ -19,27 +20,30 @@ export function SkillsPreview() {
         as="ol"
         className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 md:mt-20 lg:grid-cols-4"
       >
-        {skillGroups.map((group, i) => (
-          <StaggerItem as="li" key={group.slug} className="border-t pt-6">
-            <p className="label-mono flex items-baseline justify-between text-accent">
-              {group.verb}
-              <span className="text-foreground/40">{String(i + 1).padStart(2, "0")}</span>
-            </p>
-            <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">
-              {group.title}
-            </h3>
-            <p className="mt-3 leading-relaxed text-muted-foreground">{group.description}</p>
-            {group.tools.length > 0 && (
-              <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-1">
-                {group.tools.map((tool) => (
-                  <li key={tool} className="label-mono text-muted-foreground">
-                    {tool}
+        {skillCategories.map((category, i) => {
+          const highlights = [
+            ...category.skills.filter((skill) => skill.featured),
+            ...category.skills.filter((skill) => !skill.featured),
+          ].slice(0, 3);
+          return (
+            <StaggerItem as="li" key={category.id} className="border-t pt-6">
+              <p className="label-mono flex items-baseline justify-between text-accent">
+                {category.stance}
+                <span className="text-foreground/40">{String(i + 1).padStart(2, "0")}</span>
+              </p>
+              <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">
+                {category.title}
+              </h3>
+              <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1">
+                {highlights.map((skill) => (
+                  <li key={skill.name} className="label-mono text-muted-foreground">
+                    {skill.name}
                   </li>
                 ))}
               </ul>
-            )}
-          </StaggerItem>
-        ))}
+            </StaggerItem>
+          );
+        })}
       </Stagger>
     </Section>
   );

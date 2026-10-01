@@ -1,10 +1,11 @@
 "use client";
 
 import { Bot } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion, useScroll } from "motion/react";
+import { AnimatePresence, motion, useScroll } from "motion/react";
 import { useSyncExternalStore } from "react";
 import { Magnetic } from "@/components/animations/magnetic";
 import { duration, easeOutExpo } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /** Scroll distance (px) after which the button appears — roughly past the hero. */
 const THRESHOLD = 600;

@@ -141,7 +141,10 @@ The DOM/SVG version (`components/hero/hero-pipeline.tsx`) is permanent and is th
 components/
   navigation/   site-header, nav-links, mobile-menu, theme-toggle, back-to-top
   layout/       container, section, section-label, section-header (homepage 3|9 rail), page-header
-  hero/  work/  research/  services/  skills/  about/  contact/
+  hero/  work/  research/  services/  about/  contact/
+  skills/       skills-preview (homepage teaser) · skills-ecosystem (server, /skills) → skills-graph (client:
+                hover/focus state + SVG traces) · skill-category · skill-chip · tech-icon · research-direction ·
+                patch-scan (decorative CV motif, lg)
   animations/   reusable Motion wrappers (reveal, stagger, magnetic) — client leaves only
   intro/        first-load intro overlay (server markup) + its inline gating script
   signal/       homepage signal band (server wrapper + client SVG strands)
@@ -157,6 +160,14 @@ public/brand/   logo kit (SVG lockups with outlined text, PNG avatars) — see �
 Content is currently flat typed TS (`content/*.ts`, incl. `research-visualization.ts` for the homepage
 schematic); it moves into folders when MDX arrives in Phase 4. Research surfaces use the `.bg-grid`
 notebook utility; Work does not.
+
+**Skills (`/skills`).** 8 categories in `content/skills.ts`, laid out AI-first (owner's sketch): AI/ML → Computer
+Vision · Multimodal AI · AI Research (+ research-direction strip) → Software Engineering (foundation) → Frontend ·
+Database · Tools. Cards are numbered in visual order. Hierarchy comes from `tier` (primary / secondary / emerging →
+size, frame, the emerging ones get `.bg-grid`) and a visible neutral `stance` label ("Focused on", "Exploring"…) —
+never percentages, bars, levels or "expert". `skillLinks` drives both the traces and hover emphasis. The research
+direction (CV → Multimodal → VLMs → Embodied AI → World Models) is marked now / next / horizon: a direction, not a
+claim. The homepage shows only a compact teaser of the categories.
 
 ## 10. Animation architecture (layered — pick the lowest layer that works)
 
@@ -183,9 +194,16 @@ toggle, Back-to-Top. Small intentional targets only — never nav text links or 
 reveal, a few travelling highlights) plus a small rAF loop that writes attributes directly (no re-renders): strand
 drift, the scan cursor, tokens flowing out of the image, and the active output word. Paused offscreen / in hidden tabs; static first frame under reduced motion. Not a GSAP or WebGL case.
 
+**Skills graph.** `components/skills/skills-graph.tsx`: on lg, an `aria-hidden` SVG layer behind the cards draws
+chamfered circuit traces between measured card boxes (`offset*`, so transforms don't skew them; re-measured by a
+ResizeObserver). CSS only — traces draw in once (reusing `signal-draw`), then faint `signal` pulses loop
+(`signal-pulse`), paused offscreen via `data-skills-paused`; no rAF. Hover / focus / tap lifts a card, accents its
+traces and chips, dims unrelated cards. Below lg: no SVG, a static dashed spine. Reduced motion / no JS → static.
+
 Timing: UI transitions 200–500ms; easing token `--ease-out-expo` / Motion `[0.16, 1, 0.3, 1]`.
-Never animate every element. Every animation respects `prefers-reduced-motion` (use `useReducedMotion`;
-CSS has a global reduced-motion override).
+Never animate every element. Every animation respects `prefers-reduced-motion` (use `useReducedMotion` from
+`lib/use-reduced-motion.ts` — hydration-safe; never Motion's own hook, which breaks hydration; CSS has a global
+reduced-motion override).
 
 ## 11. Three.js rules
 
@@ -248,7 +266,8 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 
 - No generic AI imagery (brains, robots, galaxies, glowing spheres), no neon/cyberpunk, no heavy glow. Owner-approved
   exception: the small `Bot` icon on the Back-to-Top button (§6) — UI glyph only, never a visual/illustration.
-- No logo walls for skills; organize by capability.
+- No logo walls for skills; organize by capability. Small monochrome Simple Icons (CC0 paths copied from the pinned
+  `simple-icons` package into `tech-icon.tsx`, never hand-drawn) are allowed inside capability-grouped skill chips.
 - No GSAP for simple animations; no Three.js for cards/buttons/backgrounds.
 - No global state library, CMS, database or backend unless a real need appears (contact form excepted).
 - No hardcoded colors; no hype copy; no invented facts.
@@ -261,7 +280,8 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 - [x] Homepage: all §8 sections in place (previews for Phases 4–9, research schematic, reveal/stagger)
 - [ ] 4 Work (selected work ✓, cards ✓, /work list ✓ — case studies via MDX pending)
 - [ ] 5 Research (section ✓, /research list ✓ — detail pages pending)
-- [ ] 6 Services  - [ ] 7 Skills  - [ ] 8 About (homepage previews ✓; full pages pending)
+- [ ] 6 Services  - [ ] 8 About (homepage previews ✓; full pages pending)
+- [ ] 7 Skills (homepage teaser ✓, /skills animated ecosystem ✓ — owner review of descriptions pending)
 - [x] 9 Contact (form → server action → Resend, honeypot + 3s time-trap anti-spam, channels, agent
   brief, availability; needs RESEND_API_KEY + CONTACT_TO_EMAIL env vars before launch)
 - [ ] 10 Motion system (page transitions, reveals, micro-interactions)

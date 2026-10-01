@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import { duration, easeOutExpo } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 type RevealProps = {
   children: ReactNode;

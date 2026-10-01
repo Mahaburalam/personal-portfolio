@@ -1,13 +1,14 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useInView } from "motion/react";
 import Link from "next/link";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { research } from "@/content/research";
 import { vizTabs, type Acquisition } from "@/content/research-visualization";
 import { duration, easeOutExpo } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /**
  * Schematic: fixed vs adaptive visual acquisition on one 8×8 "image".

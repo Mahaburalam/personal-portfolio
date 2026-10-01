@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { isActive } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 const subscribe = () => () => {};
 

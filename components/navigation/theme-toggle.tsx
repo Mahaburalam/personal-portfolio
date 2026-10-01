@@ -1,12 +1,13 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore, type MouseEvent } from "react";
 import { flushSync } from "react-dom";
 import { easeOutExpo } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 const subscribe = () => () => {};
 

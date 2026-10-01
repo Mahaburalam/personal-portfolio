@@ -280,6 +280,88 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Skills graph (components/skills, CLAUDE.md §10). Reuses the signal  */
+/* keyframes. Without JS / under reduced motion the root never gets    */
+/* data-skills: traces are static, no pulses, no travelling dot.       */
+/* ------------------------------------------------------------------ */
+[data-skills="armed"] .skills-trace {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+[data-skills="play"] .skills-trace {
+  stroke-dasharray: 1;
+  animation: signal-draw 1.2s var(--ease-out-expo) calc(300ms + var(--i) * 70ms) both;
+}
+
+.skills-node {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+[data-skills="armed"] .skills-node {
+  opacity: 0;
+}
+
+[data-skills="play"] .skills-node {
+  animation: signal-dot 500ms var(--ease-out-expo) calc(700ms + var(--i) * 30ms) both;
+}
+
+.skills-pulse {
+  stroke-dasharray: 0.06 1.5;
+  stroke-dashoffset: 0.06;
+}
+
+[data-skills="play"] .skills-pulse {
+  animation: signal-pulse var(--dur) linear calc(1.6s + var(--delay)) infinite;
+}
+
+/* Research direction: a dot rides the track from the first step to the last */
+.skills-travel {
+  opacity: 0;
+}
+
+[data-skills="play"] .skills-travel {
+  animation: skills-travel 5s var(--ease-out-expo) 1.4s infinite;
+}
+
+/* CV patch scan: a column of light sweeps the patches, then rests */
+[data-skills="play"] .skills-patch {
+  animation: skills-scan 4.5s linear calc(1.2s + var(--c) * 60ms) infinite;
+}
+
+[data-skills-paused] .skills-pulse,
+[data-skills-paused] .skills-travel,
+[data-skills-paused] .skills-patch {
+  animation-play-state: paused;
+}
+
+@keyframes skills-scan {
+  8% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes skills-travel {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  10% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  85%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* First-load intro (components/intro, CLAUDE.md §10). ~1.65s total;   */
 /* keep PLAY_MS / EXIT_MS in intro-script.ts in sync with these times. */
 /* ------------------------------------------------------------------ */
