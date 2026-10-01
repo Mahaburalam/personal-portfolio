@@ -25,7 +25,7 @@ export const profile = {
   url: "https://example.com",
 } as const;
 
-export type SocialIcon = "github" | "linkedin" | "x" | "scholar";
+export type SocialIcon = "github" | "linkedin" | "x" | "scholar" | "researchgate";
 
 export type SocialLink = { label: string; href: string | null; icon: SocialIcon };
 
@@ -39,6 +39,11 @@ export const socialLinks: SocialLink[] = [
     label: "Google Scholar",
     href: "https://scholar.google.com/citations?user=fVb4LNoAAAAJ&hl=en",
     icon: "scholar",
+  },
+  {
+    label: "ResearchGate",
+    href: "https://www.researchgate.net/profile/Md-Mahabur-Alam",
+    icon: "researchgate",
   },
 ];
 

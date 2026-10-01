@@ -21,17 +21,19 @@ export function ExperienceProof() {
 
   return (
     <Section aria-labelledby="path-title">
-      <SectionHeader
-        id="path-title"
-        label="Path"
-        index={6}
-        title="From engineering to research."
-        intro="A production software engineering foundation, moving deliberately toward AI research."
-      />
+      <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
+        <SectionHeader
+          variant="rail"
+          id="path-title"
+          label="Path"
+          index={7}
+          title="From engineering to research."
+          intro="A production software engineering foundation, moving deliberately toward AI research."
+          className="lg:col-span-3"
+        />
 
-      <div className="mt-14 grid gap-14 md:mt-20 lg:grid-cols-12 lg:gap-8">
         {/* Story arc */}
-        <Stagger as="ol" className="relative lg:col-span-6 lg:col-start-4">
+        <Stagger as="ol" className="relative lg:col-span-6">
           {stages.map((stage, i) => {
             const last = i === stages.length - 1;
             return (
@@ -51,7 +53,9 @@ export function ExperienceProof() {
                     aria-hidden
                     className={cn(
                       "mt-0.5 size-2.5 shrink-0 rounded-full border",
-                      last ? "border-accent bg-accent" : "border-foreground/40 bg-background",
+                      last
+                        ? "bg-spectrum border-transparent"
+                        : "border-foreground/40 bg-background",
                     )}
                   />
                 </span>
@@ -60,7 +64,7 @@ export function ExperienceProof() {
                   <h3
                     className={cn(
                       "mt-1 font-display text-2xl font-semibold tracking-tight sm:text-3xl",
-                      last && "text-accent",
+                      last && "text-spectrum",
                     )}
                   >
                     {stage.title}
@@ -73,8 +77,8 @@ export function ExperienceProof() {
         </Stagger>
 
         {/* Proof */}
-        <Reveal className="lg:col-span-3 lg:col-start-10" delay={0.1}>
-          <dl className="space-y-8 border-t pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
+        <Reveal className="lg:col-span-3" delay={0.1}>
+          <dl className="space-y-8 rounded-lg border bg-card p-6">
             {currentRole && (
               <div>
                 <dt className="label-mono text-muted-foreground">Now</dt>

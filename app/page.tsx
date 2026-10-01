@@ -1,8 +1,8 @@
 import { AboutPreview } from "@/components/about/about-preview";
 import { ExperienceProof } from "@/components/about/experience-proof";
 import { ContactCta } from "@/components/contact/contact-cta";
-import { Currently } from "@/components/hero/currently";
 import { Hero } from "@/components/hero/hero";
+import { FocusRow } from "@/components/research/focus-row";
 import { ResearchPreview } from "@/components/research/research-preview";
 import { ResearchVisualizationSection } from "@/components/research/research-visualization-section";
 import { SignalBand } from "@/components/signal/signal-band";
@@ -15,15 +15,15 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Currently />
       <SelectedWork />
       <ResearchPreview />
       <ResearchVisualizationSection />
+      <FocusRow />
       <ServicesPreview />
       <SkillsPreview />
       <ExperienceProof />
       <AboutPreview />
-      <ContactCta />
+      <ContactCta index={9} />
       <SignalBand />
     </>
   );

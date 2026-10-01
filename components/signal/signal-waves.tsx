@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from "react";
+import { mulberry32 } from "@/lib/random";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -20,17 +21,6 @@ const SAMPLES = 64;
 const TAU = Math.PI * 2;
 const FLIGHT = 1.6; // seconds a token takes from its patch to the convergence point
 const WORD_BEAT = 1.1; // seconds each output word stays highlighted
-
-// Deterministic PRNG so the server render and the client agree.
-function mulberry32(seed: number) {
-  let a = seed;
-  return () => {
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 const mod = (a: number, n: number) => ((a % n) + n) % n;
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
@@ -252,7 +242,7 @@ export function SignalWaves({
   return (
     <div ref={rootRef} className={cn("relative", className)} aria-hidden>
       {/* Soft warm wash behind the output words */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--accent)_12%,transparent),transparent)]" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--spectrum-end)_12%,transparent),transparent)]" />
 
       <svg
         ref={svgRef}
@@ -265,9 +255,9 @@ export function SignalWaves({
             <stop offset="0.3" style={{ stopColor: "var(--signal)" }} />
             <stop
               offset="0.62"
-              style={{ stopColor: "color-mix(in oklab, var(--signal), var(--accent))" }}
+              style={{ stopColor: "color-mix(in oklab, var(--signal), var(--spectrum-end))" }}
             />
-            <stop offset="0.92" style={{ stopColor: "var(--accent)" }} />
+            <stop offset="0.92" style={{ stopColor: "var(--spectrum-end)" }} />
           </linearGradient>
         </defs>
 
@@ -368,7 +358,7 @@ export function SignalWaves({
         {/* 04 Output */}
         {g.words.map((p, k) => (
           <g key={k} style={{ "--i": k } as CSSProperties}>
-            <circle cx={p.x} cy={p.y} r={3} className="signal-dot fill-accent" />
+            <circle cx={p.x} cy={p.y} r={3} className="signal-dot fill-spectrum-end" />
             <text
               data-word={k}
               x={p.x + 10}

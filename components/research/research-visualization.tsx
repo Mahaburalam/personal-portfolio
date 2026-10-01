@@ -73,7 +73,7 @@ function adaptivePatch(i: number, acquisition: Acquisition): PatchLook {
 const toneClass = {
   fine: "bg-signal",
   coarse: "bg-foreground",
-  cached: "bg-accent",
+  cached: "bg-spectrum-end",
 } as const;
 
 function PatchGrid({ look }: { look: (i: number) => PatchLook }) {
@@ -351,7 +351,7 @@ export function ResearchVisualization() {
         {[
           { tone: "bg-signal", label: "Full-resolution token" },
           { tone: "bg-foreground/50", label: "Low-resolution token" },
-          { tone: "bg-accent", label: "Reused token" },
+          { tone: "bg-spectrum-end", label: "Reused token" },
         ].map((l) => (
           <span key={l.label} className="label-mono flex items-center gap-2">
             <span aria-hidden className={cn("size-2.5 rounded-[2px]", l.tone)} />

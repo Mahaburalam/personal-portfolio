@@ -61,11 +61,15 @@ All colors are CSS variables in `app/globals.css`, mapped to Tailwind v4 via `@t
 **Never hardcode hex colors in components** — use `bg-background`, `text-muted-foreground`, `border-border`, etc.
 
 Tokens: `background, foreground, muted, muted-foreground, border, card, card-foreground, accent,
-accent-foreground, signal, destructive, ring`.
+accent-foreground, signal, spectrum-start, spectrum-end, destructive, ring`.
 
 - `destructive` is only for form validation / failure messages (AA on `background` and `card`).
-- **Light** (editorial, warm): warm off-white paper, near-black ink, warm grays, muted gold accent (`#7A6526`, the AA-safe shade of brand gold `#BAA35F`).
-- **Dark** (technical, premium): near-black, `#E6E6E6` text, cool grays, brand gold accent (`#BAA35F`), cyan `signal` used sparingly.
+- **Light** (editorial, clean): neutral cool off-white, white cards, near-black ink, cool grays, muted gold accent (`#7A6526`, the AA-safe shade of brand gold `#BAA35F`).
+- **Dark** (technical, premium): navy-black, `#E6E6E6` text, cool grays, brand gold accent (`#BAA35F`), cyan `signal` used sparingly.
+- `spectrum-start` → `spectrum-end` (blue → violet) is the AI/visual-token color (owner's homepage mockup): the hero
+  headline word (`.text-spectrum`), hero/research visuals, generated card covers. Never for body text, buttons or
+  UI states — gold `accent` keeps interactive states (nav indicator, ring, hover). `.text-spectrum` / `.bg-spectrum`
+  are registered in `cn`.
 - Brand palette: primary gold `#BAA35F`, secondary `#E6E6E6`. The logo kit (§6) keeps its own colors.
 - `signal` (cyan) is only for "live"/AI moments (token highlights, status dots). Glow is rare and subtle.
 
@@ -96,7 +100,7 @@ in `public/brand/`; never redraw the mark ad hoc — reuse those paths. Do not a
 Nav items are 13px mono uppercase (`font-mono` uppercase, tracking 0.12em). Active route shows an animated indicator (Motion `layoutId`). Minimal — do not add items.
 Mobile: name + menu button → full-screen Motion overlay with the same links + theme toggle. Esc closes,
 focus is trapped while open and returned to the button on close, body scroll locked.
-Footer: logo (links home) left · nav links (mono) center · social icons right (GitHub, LinkedIn, X, Google Scholar;
+Footer: logo (links home) left · nav links (mono) center · social icons right (GitHub, LinkedIn, X, Google Scholar, ResearchGate;
 `null` hrefs in `lib/site.ts` hide an icon); bottom row © year + name · role (right-padded on sm+ to clear Back-to-Top).
 Back-to-Top (`components/navigation/back-to-top.tsx`, mounted once in the root layout): 36px round button (44px hit area), small `Bot` icon,
 bottom-right, z-30 (under header and mobile menu); fades/slides in after 600px of scroll, thin ring tracks scroll
@@ -117,31 +121,46 @@ Writing = what I think about. Research pages must look visually different (lab/n
 
 ## 8. Homepage structure (in order)
 
-1. Hero 2. Currently 3. Selected Portfolio 4. Research 5. Research Visualization 6. Services 7. Skills
+1. Hero 2. Selected Work 3. Research Lab 4. Research Visualization 5. Currently Exploring 6. Services 7. Skills
 8. Experience / Proof 9. About preview 10. Contact CTA 11. Signal band 12. Footer.
+Homepage sections use `SectionHeader variant="rail"`: a stacked heading column (label, h2, intro, arrow link) left
+of the content (owner's mockup). Inner pages keep the default 3|9 `split`.
 Homepage is not a resume — details live on dedicated pages.
 Signal band (`components/signal/`): decorative prelude to the footer — the hero signature told as a signal. A small
 patch-grid image is scanned into visual tokens that converge, fan out into interweaving strands (reasoning;
-`signal` → `accent` gradient) and land on the words of the statement. Visual is `aria-hidden`; the caption is
+`signal` → `spectrum-end` gradient) and land on the words of the statement. Visual is `aria-hidden`; the caption is
 its text equivalent. No section number.
 
 Visitor timeline: 5s who · 15s what I work on · 30s what I built · 60s what I research · 90s why engineering matters.
 
 ### Hero
-Name, role, statement, supporting line, CTAs `Explore Portfolio →` (/work) and `Research →` (/research),
-labels `COMPUTER VISION · VLMs · MULTIMODAL AI · AI SYSTEMS`, meta "Currently: Senior Software Engineer",
-"Research focus: Efficient & Adaptive Vision-Language Systems".
-Visual signature: **IMAGE → PATCHES → VISUAL TOKENS → REASONING → OUTPUT**. Never a generic sphere, brain,
-galaxy, robot or neural-net animation. Desktop: text | visual. Mobile: text, then simplified visual.
-The DOM/SVG version (`components/hero/hero-pipeline.tsx`) is permanent and is the fallback for the WebGL version.
+Eyebrow role (`AI RESEARCHER & ENGINEER`), h1 = statement with "intelligent" in `.text-spectrum` (the name is an
+`sr-only` prefix of the h1; it is visible in the header), supporting line, CTAs `Explore Work →` (/work) and
+`Research →` (/research), labels `COMPUTER VISION · VLMs · MULTIMODAL AI · AI SYSTEMS · SOFTWARE ENGINEERING`
+(`heroLabels`), status line with a live `signal` dot: "Currently: Senior Software Engineer | Research focus: …".
+Visual signature: **IMAGE → PATCHES → VISUAL TOKENS → REASONING → OUTPUT**, drawn as a CSS-3D perspective stack of
+panels (`components/hero/hero-signature.tsx`): image (procedural SVG scene, or `heroVisual.image` when the owner
+supplies a photo) → patch grid → token grids → reasoning stream → output dot cloud. Never a generic sphere, brain,
+galaxy, robot or neural-net animation. Desktop: text | visual. Mobile: text, then a flatter 3-panel version in a card.
+This DOM/SVG version is permanent and is the fallback for the WebGL version.
+
+### Selected Work / Research Lab / Currently Exploring
+Work: 3 boxed tiles (cover, category chip, title, summary, tags, meta, "View case →"). Covers are `next/image` when
+`project.cover` exists, else a generated token-grid cover (`project-cover.tsx`). Research Lab: 3 hairline columns
+(status badge, tags, "Read notes →" — never "Read paper" until a paper exists) + `research-field.tsx`, a dot-matrix
+patch field with crop thumbnails and a 01/03 pager that follow the active line. Currently Exploring: six focus areas
+from `content/focus.ts`.
 
 ## 9. Component architecture
 
 ```
 components/
   navigation/   site-header, nav-links, mobile-menu, theme-toggle, back-to-top
-  layout/       container, section, section-label, section-header (3|9 rail: homepage + long inner pages), page-header
-  hero/  work/  research/  services/  about/  contact/
+  layout/       container, section, section-label, section-header (`split` 3|9: long inner pages · `rail` stacked: homepage), page-header
+  hero/         hero (server) · hero-signature (perspective stack) → hero-signature-motion (pause leaf)
+  work/         selected-work · project-tile + project-cover (homepage) · project-card (/work rows)
+  research/     research-preview (Research Lab) → research-field (client) · focus-row · research-entry (/research)
+  services/  about/  contact/
   skills/       skills-preview (homepage teaser) · skills-ecosystem (server, /skills) → skills-graph (client:
                 hover/focus state + SVG traces) · skill-category · skill-chip · tech-icon · research-direction ·
                 patch-scan (decorative CV motif, xl)
@@ -281,7 +300,8 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 
 ## 19. Do-not-do
 
-- No generic AI imagery (brains, robots, galaxies, glowing spheres), no neon/cyberpunk, no heavy glow. Owner-approved
+- No generic AI imagery (brains, robots, galaxies, glowing spheres), no neon/cyberpunk, no heavy glow. The mockup's
+  research "orb" is deliberately rendered as a flat dot-matrix patch field, not a sphere. Owner-approved
   exception: the small `Bot` icon on the Back-to-Top button (§6) — UI glyph only, never a visual/illustration.
 - No logo walls for skills; organize by capability. Small monochrome Simple Icons (CC0 paths copied from the pinned
   `simple-icons` package into `tech-icon.tsx`, never hand-drawn) are allowed inside capability-grouped skill chips.

@@ -24,10 +24,11 @@ export function ContactCta({ index = 8, intro = contactCopy.intro, secondary }: 
         <SectionLabel index={index} className="lg:col-span-3 lg:pt-4">
           Contact
         </SectionLabel>
-        <div className="lg:col-span-9">
+        <div className="relative overflow-hidden rounded-lg border bg-card p-6 sm:p-10 lg:col-span-9 lg:p-14">
+          <span aria-hidden className="bg-spectrum absolute inset-x-0 top-0 h-px" />
           <h2
             id="contact-title"
-            className="max-w-4xl font-display text-4xl leading-[1.02] font-semibold tracking-tight sm:text-6xl xl:text-7xl"
+            className="max-w-4xl font-display text-4xl leading-[1.04] font-semibold tracking-tight sm:text-5xl xl:text-6xl"
           >
             {contactCopy.title}
           </h2>

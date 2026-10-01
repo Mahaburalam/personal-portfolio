@@ -8,13 +8,13 @@ export function AboutPreview() {
   return (
     <Section aria-labelledby="about-title">
       <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-        <SectionLabel index={7} className="lg:col-span-3 lg:pt-3">
+        <SectionLabel index={8} className="lg:col-span-3 lg:pt-3">
           About
         </SectionLabel>
-        <div className="lg:col-span-9">
+        <div className="rounded-lg border bg-card p-6 sm:p-10 lg:col-span-9">
           <h2
             id="about-title"
-            className="max-w-4xl font-display text-3xl leading-[1.1] font-semibold tracking-tight sm:text-5xl"
+            className="max-w-4xl font-display text-3xl leading-[1.1] font-semibold tracking-tight sm:text-4xl"
           >
             {about.headline}
           </h2>

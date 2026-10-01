@@ -7,18 +7,21 @@
 /* Design tokens — the only place raw colors are allowed (CLAUDE.md §4) */
 /* ------------------------------------------------------------------ */
 
-/* Light — editorial: warm paper, ink, muted gold (AA-safe shade of #baa35f) */
+/* Light — editorial: cool off-white, white cards, ink, muted gold (AA-safe shade of #baa35f) */
 :root {
-  --background: #f6f4ef;
-  --foreground: #141414;
-  --muted: #ece9e2;
-  --muted-foreground: #5f5e5a;
-  --border: #dcd8ce;
-  --card: #fbfaf7;
-  --card-foreground: #141414;
+  --background: #f4f5f7;
+  --foreground: #12141a;
+  --muted: #eceef2;
+  --muted-foreground: #5b6170;
+  --border: #e0e3e9;
+  --card: #ffffff;
+  --card-foreground: #12141a;
   --accent: #7a6526;
   --accent-foreground: #ffffff;
   --signal: #0e8f9a;
+  /* Visual-token spectrum (blue → violet): AI visuals and the hero headline word only */
+  --spectrum-start: #3149d8;
+  --spectrum-end: #6a3fd4;
   --destructive: #b42318;
   --ring: #7a6526;
 
@@ -26,18 +29,20 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark — technical: near-black, #e6e6e6 text, brand gold, sparing cyan */
+/* Dark — technical: navy-black, #e6e6e6 text, brand gold, sparing cyan */
 .dark {
-  --background: #0a0b0d;
+  --background: #070a12;
   --foreground: #e6e6e6;
-  --muted: #15171a;
-  --muted-foreground: #8b8f96;
-  --border: #22252a;
-  --card: #0f1114;
+  --muted: #121725;
+  --muted-foreground: #8a92a3;
+  --border: #1b2232;
+  --card: #0c101a;
   --card-foreground: #e6e6e6;
   --accent: #baa35f;
-  --accent-foreground: #0a0b0d;
+  --accent-foreground: #070a12;
   --signal: #3fd0d4;
+  --spectrum-start: #6e8bff;
+  --spectrum-end: #a47bff;
   --destructive: #f97066;
   --ring: #baa35f;
 }
@@ -53,6 +58,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-signal: var(--signal);
+  --color-spectrum-start: var(--spectrum-start);
+  --color-spectrum-end: var(--spectrum-end);
   --color-destructive: var(--destructive);
   --color-ring: var(--ring);
 
@@ -154,6 +161,19 @@
       );
     background-size: 24px 24px;
   }
+
+  /* Blue → violet visual-token spectrum (CLAUDE.md §4). Text variant keeps a solid fallback color. */
+  .text-spectrum {
+    color: var(--spectrum-start);
+    background-image: linear-gradient(100deg, var(--spectrum-start), var(--spectrum-end));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .bg-spectrum {
+    background-image: linear-gradient(120deg, var(--spectrum-start), var(--spectrum-end));
+  }
 }
 
 /* Theme switch: circular reveal driven from ThemeToggle via the View Transitions API */
@@ -166,6 +186,81 @@
 /* Don't let the body color fade fight the reveal snapshot */
 .theme-switching body {
   transition: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero signature (components/hero, CLAUDE.md §8/§10). Panels turn in   */
+/* once; scan / token / drift loops pause offscreen via [data-paused].  */
+/* Reduced motion: panels land instantly, the loops are removed.        */
+/* ------------------------------------------------------------------ */
+.hero-panel {
+  transform: perspective(900px) rotateY(24deg);
+  animation: hero-in 900ms var(--ease-out-expo) calc(150ms + var(--i) * 90ms) both;
+}
+
+.hero-scan {
+  animation: hero-scan 4.2s ease-in-out 1.2s infinite both;
+}
+
+.hero-token {
+  animation: hero-token 3.2s ease-in-out calc(var(--i) * -0.37s) infinite;
+}
+
+.hero-drift {
+  animation: hero-drift 3.6s linear calc(var(--i) * -0.29s) infinite;
+}
+
+[data-paused] :is(.hero-scan, .hero-token, .hero-drift) {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scan {
+    display: none;
+  }
+  .hero-token,
+  .hero-drift {
+    animation: none !important;
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(42deg) translateX(-24px);
+  }
+}
+
+/* The scanline is 18% tall: 560% moves it from just above to just below the panel */
+@keyframes hero-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  70%,
+  to {
+    transform: translateY(560%);
+  }
+}
+
+@keyframes hero-token {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes hero-drift {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(10px);
+  }
 }
 
 /* ------------------------------------------------------------------ */
