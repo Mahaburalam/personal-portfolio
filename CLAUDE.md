@@ -82,7 +82,7 @@ sun/moon icon swap; instant when the API is unsupported or reduced motion is on.
 
 ## 6. Navigation
 
-Desktop: logo left (links home, `aria-label` with the full name); right: `WORK  RESEARCH  SERVICE  SKILL  ABOUT  CONTACT  ◐`.
+Desktop: logo left (links home, `aria-label` with the full name); right: `PORTFOLIO  RESEARCH  SERVICE  SKILL  ABOUT  CONTACT  ◐`.
 
 **Brand mark — "Shared Apex" MA** (`components/navigation/logo.tsx`, inline outlined SVG, theme tokens):
 the M's last stroke is also the A's left leg (one unified symbol, not "M" next to "A"). Code reference: the A's
@@ -96,7 +96,11 @@ Nav items are 13px mono uppercase (`font-mono` uppercase, tracking 0.12em). Acti
 Mobile: name + menu button → full-screen Motion overlay with the same links + theme toggle. Esc closes,
 focus is trapped while open and returned to the button on close, body scroll locked.
 Footer: logo (links home) left · nav links (mono) center · social icons right (GitHub, LinkedIn, X, Google Scholar;
-`null` hrefs in `lib/site.ts` hide an icon); bottom row © year + name · role.
+`null` hrefs in `lib/site.ts` hide an icon); bottom row © year + name · role (right-padded on sm+ to clear Back-to-Top).
+Back-to-Top (`components/navigation/back-to-top.tsx`, mounted once in the root layout): 36px round button (44px hit area), small `Bot` icon,
+bottom-right, z-30 (under header and mobile menu); fades/slides in after 600px of scroll, thin ring tracks scroll
+progress; hover fills it with `accent`, the circle is magnetic (§10) and the robot hops/waves (CSS `animate-bot-wiggle`). Click smooth-scrolls to
+top then focus moves to the header logo. Reduced motion → instant scroll, opacity-only, no wiggle.
 
 ## 7. Routes / page architecture
 
@@ -112,14 +116,14 @@ Writing = what I think about. Research pages must look visually different (lab/n
 
 ## 8. Homepage structure (in order)
 
-1. Hero 2. Currently 3. Selected Work 4. Research 5. Research Visualization 6. Services 7. Skills
+1. Hero 2. Currently 3. Selected Portfolio 4. Research 5. Research Visualization 6. Services 7. Skills
 8. Experience / Proof 9. About preview 10. Contact CTA 11. Footer.
 Homepage is not a resume — details live on dedicated pages.
 
 Visitor timeline: 5s who · 15s what I work on · 30s what I built · 60s what I research · 90s why engineering matters.
 
 ### Hero
-Name, role, statement, supporting line, CTAs `Explore Work →` (/work) and `Research →` (/research),
+Name, role, statement, supporting line, CTAs `Explore Portfolio →` (/work) and `Research →` (/research),
 labels `COMPUTER VISION · VLMs · MULTIMODAL AI · AI SYSTEMS`, meta "Currently: Senior Software Engineer",
 "Research focus: Efficient & Adaptive Vision-Language Systems".
 Visual signature: **IMAGE → PATCHES → VISUAL TOKENS → REASONING → OUTPUT**. Never a generic sphere, brain,
@@ -130,10 +134,11 @@ The DOM/SVG version (`components/hero/hero-pipeline.tsx`) is permanent and is th
 
 ```
 components/
-  navigation/   site-header, nav-links, mobile-menu, theme-toggle
+  navigation/   site-header, nav-links, mobile-menu, theme-toggle, back-to-top
   layout/       container, section, section-label, section-header (homepage 3|9 rail), page-header
   hero/  work/  research/  services/  skills/  about/  contact/
-  animations/   reusable Motion wrappers (reveal, stagger) — client leaves only
+  animations/   reusable Motion wrappers (reveal, stagger, magnetic) — client leaves only
+  intro/        first-load intro overlay (server markup) + its inline gating script
   three/        ALL Three.js / R3F code, isolated, lazy-loaded
   providers/    theme-provider, motion-provider (MotionConfig reducedMotion="user")
   ui/           shadcn-style primitives (button, tag) using cn + cva; social-icon (inline Simple Icons
@@ -155,6 +160,18 @@ notebook utility; Work does not.
 3. **GSAP + ScrollTrigger** — ONLY for pinned sections, multi-stage scroll storytelling, synchronized timelines.
    Not installed yet; add only when a specific section proves Motion insufficient, and note why here.
 4. **Three.js + R3F + Drei** — ONLY for the hero visual and possibly research visualization. Not installed until Phase 12.
+
+**Intro (first load).** `components/intro/`: a typographic overlay — MA mark wipes up, `MAHABUR ALAM` letters
+slide up through masks, role line fades in, a hairline draws as quiet progress, then the overlay wipes upward
+(~1.6s total). Pure CSS keyframes so it starts at first paint, before hydration. An inline script in `<body>` sets
+`html[data-intro="play"]` only when a browser session *starts* on `/` (hard load) and reduced motion is off;
+deep links, reloads and client navigations never see it. Any key / pointer / wheel skips it (300ms exit).
+No JS → no overlay. Never lengthen it, never add a spinner or percentage counter.
+
+**Magnetic.** `components/animations/magnetic.tsx`: a stable outer span listens, an inner Motion span springs
+toward the cursor (≤8px, ≤3° tilt, 1.04 scale) and settles back on leave. Mouse pointers only (touch/pen ignored),
+off under reduced motion, motion values only (no re-renders). Used on: hero CTAs, contact CTA, desktop theme
+toggle, Back-to-Top. Small intentional targets only — never nav text links or cards.
 
 Timing: UI transitions 200–500ms; easing token `--ease-out-expo` / Motion `[0.16, 1, 0.3, 1]`.
 Never animate every element. Every animation respects `prefers-reduced-motion` (use `useReducedMotion`;
@@ -219,7 +236,8 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 
 ## 19. Do-not-do
 
-- No generic AI imagery (brains, robots, galaxies, glowing spheres), no neon/cyberpunk, no heavy glow.
+- No generic AI imagery (brains, robots, galaxies, glowing spheres), no neon/cyberpunk, no heavy glow. Owner-approved
+  exception: the small `Bot` icon on the Back-to-Top button (§6) — UI glyph only, never a visual/illustration.
 - No logo walls for skills; organize by capability.
 - No GSAP for simple animations; no Three.js for cards/buttons/backgrounds.
 - No global state library, CMS, database or backend unless a real need appears (contact form excepted).
@@ -234,8 +252,8 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 - [ ] 4 Work (selected work ✓, cards ✓, /work list ✓ — case studies via MDX pending)
 - [ ] 5 Research (section ✓, /research list ✓ — detail pages pending)
 - [ ] 6 Services  - [ ] 7 Skills  - [ ] 8 About (homepage previews ✓; full pages pending)
-- [x] 9 Contact (form → server action → Resend, channels, agent brief, availability; needs
-  RESEND_API_KEY before launch)
+- [x] 9 Contact (form → server action → Resend, honeypot + 3s time-trap anti-spam, channels, agent
+  brief, availability; needs RESEND_API_KEY + CONTACT_TO_EMAIL env vars before launch)
 - [ ] 10 Motion system (page transitions, reveals, micro-interactions)
 - [ ] 11 Advanced scroll (GSAP, only if needed)
 - [ ] 12 Three.js hero visual (+ research viz if it improves the concept)

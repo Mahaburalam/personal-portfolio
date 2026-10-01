@@ -59,6 +59,12 @@ export function ContactForm() {
   const [messageLength, setMessageLength] = useState(0);
   const [dismissed, setDismissed] = useState<ContactState | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const startedAtRef = useRef<HTMLInputElement>(null);
+
+  // Time-trap: stamp when the form appeared (after mount, so SSR markup stays stable).
+  useEffect(() => {
+    if (startedAtRef.current) startedAtRef.current.value = String(Date.now());
+  }, []);
 
   const errors = state.status === "invalid" ? state.errors : {};
   const describedBy = (field: ContactField) => (errors[field] ? `${field}-error` : undefined);
@@ -218,6 +224,7 @@ export function ContactForm() {
         <label htmlFor="website">Website</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
+      <input ref={startedAtRef} type="hidden" name="startedAt" defaultValue="" />
 
       <div className="flex flex-col gap-6 sm:col-span-2">
         <div id="form-status" role="status" aria-live="polite">

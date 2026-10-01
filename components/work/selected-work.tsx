@@ -9,11 +9,11 @@ export function SelectedWork() {
     <Section aria-labelledby="work-title">
       <SectionHeader
         id="work-title"
-        label="Selected Work"
+        label="Selected Portfolio"
         index={1}
         title="Systems I've built."
         intro="Real-world systems. Research-driven ideas."
-        action={{ href: "/work", label: "All work" }}
+        action={{ href: "/work", label: "Full portfolio" }}
       />
 
       <Stagger as="ul" className="mt-14 border-t md:mt-20">

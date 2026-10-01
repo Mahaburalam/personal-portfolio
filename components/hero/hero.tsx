@@ -1,3 +1,4 @@
+import { Magnetic } from "@/components/animations/magnetic";
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/ui/button";
 import { profile } from "@/lib/site";
@@ -25,12 +26,16 @@ export function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <ButtonLink href="/work" arrow>
-              Explore Work
-            </ButtonLink>
-            <ButtonLink href="/research" variant="outline" arrow>
-              Research
-            </ButtonLink>
+            <Magnetic>
+              <ButtonLink href="/work" arrow>
+                Explore Portfolio
+              </ButtonLink>
+            </Magnetic>
+            <Magnetic>
+              <ButtonLink href="/research" variant="outline" arrow>
+                Research
+              </ButtonLink>
+            </Magnetic>
           </div>
 
           <dl className="mt-12 grid max-w-lg gap-4 border-t pt-6 sm:grid-cols-2">

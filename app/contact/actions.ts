@@ -4,13 +4,24 @@ import { z } from "zod";
 import { inquiryTypes } from "@/content/contact";
 import { contactSchema, type ContactField, type ContactState } from "@/lib/contact-schema";
 
+/** Time-trap: people need a few seconds to fill the form; bots submit almost instantly. */
+const MIN_FILL_MS = 3000;
+
 /**
- * Validates a contact inquiry and emails it to the owner through Resend's REST API.
+ * Filters bots (honeypot + time-trap), validates a contact inquiry and emails it to the owner
+ * through Resend's REST API.
  * Env: RESEND_API_KEY, CONTACT_TO_EMAIL, CONTACT_FROM_EMAIL (see .env.example).
  */
 export async function sendInquiry(_prev: ContactState, formData: FormData): Promise<ContactState> {
   // Honeypot: real visitors never see or fill this field. Pretend success for bots.
   if (formData.get("website")) return { status: "success" };
+
+  // No timestamp: a script posting directly, or a visitor without JS — the error message
+  // points people to the email address, so no real message is silently lost.
+  const startedAt = Number(formData.get("startedAt"));
+  if (!startedAt) return { status: "error" };
+  // Too fast to be human. Pretend success so bots get no signal.
+  if (Date.now() - startedAt < MIN_FILL_MS) return { status: "success" };
 
   const parsed = contactSchema.safeParse({
     name: formData.get("name"),

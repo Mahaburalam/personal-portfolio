@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Magnetic } from "@/components/animations/magnetic";
 import { Container } from "@/components/layout/container";
 import { profile } from "@/lib/site";
 import { Logo } from "./logo";
@@ -20,7 +21,9 @@ export function SiteHeader() {
 
         <nav aria-label="Primary" className="hidden items-center lg:flex">
           <NavLinks />
-          <ThemeToggle className="ml-2" />
+          <Magnetic className="ml-2">
+            <ThemeToggle />
+          </Magnetic>
         </nav>
 
         <div className="lg:hidden">

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Manrope, Sora } from "next/font/google";
+import { IntroOverlay } from "@/components/intro/intro-overlay";
+import { BackToTop } from "@/components/navigation/back-to-top";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -37,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <IntroOverlay />
           <MotionProvider>
             <a
               href="#main"
@@ -49,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               {children}
             </main>
             <SiteFooter />
+            <BackToTop />
           </MotionProvider>
         </ThemeProvider>
       </body>

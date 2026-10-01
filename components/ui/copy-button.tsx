@@ -11,6 +11,27 @@ type CopyButtonProps = {
   className?: string;
 };
 
+/**
+ * Fallback for when the async Clipboard API is missing or blocked — it only exists in secure
+ * contexts, so e.g. the dev server opened via a LAN IP over plain http has no `navigator.clipboard`.
+ */
+function legacyCopy(text: string): boolean {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    return document.execCommand("copy");
+  } catch {
+    return false;
+  } finally {
+    textarea.remove();
+  }
+}
+
 /** Copies `text` to the clipboard and confirms for two seconds. */
 export function CopyButton({ text, label, className }: CopyButtonProps) {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
@@ -26,7 +47,7 @@ export function CopyButton({ text, label, className }: CopyButtonProps) {
       await navigator.clipboard.writeText(text);
       setState("copied");
     } catch {
-      setState("failed");
+      setState(legacyCopy(text) ? "copied" : "failed");
     }
   };
 

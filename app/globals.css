@@ -76,6 +76,28 @@
       opacity: 0;
     }
   }
+
+  /* Back-to-Top hover: the robot hops and waves while hovered */
+  --animate-bot-wiggle: bot-wiggle 0.9s ease-in-out infinite;
+
+  @keyframes bot-wiggle {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    20% {
+      transform: translateY(-3px) rotate(-14deg);
+    }
+    40% {
+      transform: translateY(0) rotate(12deg);
+    }
+    60% {
+      transform: translateY(-2px) rotate(-8deg);
+    }
+    80% {
+      transform: translateY(0) rotate(5deg);
+    }
+  }
 }
 
 @layer base {
@@ -144,6 +166,104 @@
 /* Don't let the body color fade fight the reveal snapshot */
 .theme-switching body {
   transition: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* First-load intro (components/intro, CLAUDE.md §10). ~1.65s total;   */
+/* keep PLAY_MS / EXIT_MS in intro-script.ts in sync with these times. */
+/* ------------------------------------------------------------------ */
+html[data-intro] .intro {
+  display: grid;
+  animation: intro-wipe 500ms var(--ease-out-expo) 1.15s forwards;
+}
+
+html[data-intro] .intro-content {
+  animation: intro-content-out 400ms var(--ease-out-expo) 1.1s forwards;
+}
+
+html[data-intro] .intro-mark {
+  animation: intro-mask-up 600ms var(--ease-out-expo) 0.05s both;
+}
+
+/* The token patch (signal) lands last — IMAGE → PATCH */
+html[data-intro] .intro-mark path:last-child {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: intro-token 400ms var(--ease-out-expo) 0.4s both;
+}
+
+html[data-intro] .intro-letter {
+  animation: intro-letter 600ms var(--ease-out-expo) calc(0.2s + var(--i) * 28ms) both;
+}
+
+html[data-intro] .intro-line {
+  transform-origin: left;
+  animation: intro-line 850ms var(--ease-out-expo) 0.2s both;
+}
+
+html[data-intro] .intro-role {
+  animation: intro-role 450ms var(--ease-out-expo) 0.55s both;
+}
+
+/* Skipped by key / pointer / wheel: leave quickly from wherever it is */
+html[data-intro="exit"] .intro {
+  animation: intro-wipe 300ms var(--ease-out-expo) forwards;
+}
+
+html[data-intro="exit"] .intro-content {
+  animation: intro-content-out 250ms var(--ease-out-expo) forwards;
+}
+
+@keyframes intro-wipe {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+@keyframes intro-content-out {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes intro-mask-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes intro-token {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes intro-letter {
+  from {
+    transform: translateY(110%);
+  }
+}
+
+@keyframes intro-line {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes intro-role {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,7 +1,7 @@
 export type NavItem = { label: string; href: string };
 
 export const navItems: NavItem[] = [
-  { label: "Work", href: "/work" },
+  { label: "Portfolio", href: "/work" },
   { label: "Research", href: "/research" },
   { label: "Service", href: "/services" },
   { label: "Skill", href: "/skills" },

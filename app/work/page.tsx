@@ -4,14 +4,14 @@ import { Section } from "@/components/layout/section";
 import { ProjectCard } from "@/components/work/project-card";
 import { projects } from "@/content/projects";
 
-export const metadata: Metadata = { title: "Work" };
+export const metadata: Metadata = { title: "Portfolio" };
 
 // Project index. Case studies (/work/[slug], MDX) land in Phase 4 (CLAUDE.md §20).
 export default function WorkPage() {
   return (
     <>
       <PageHeader
-        label="Work"
+        label="Portfolio"
         title="Featured projects and case studies."
         intro="Real-world systems. Research-driven ideas. Built with modern technologies."
       />

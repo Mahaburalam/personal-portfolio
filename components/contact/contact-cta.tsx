@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import { Magnetic } from "@/components/animations/magnetic";
 import { Reveal } from "@/components/animations/reveal";
 import { SectionLabel } from "@/components/layout/section-label";
 import { Section } from "@/components/layout/section";
@@ -27,9 +28,11 @@ export function ContactCta() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <ButtonLink href="/contact" arrow>
-              Start a conversation
-            </ButtonLink>
+            <Magnetic>
+              <ButtonLink href="/contact" arrow>
+                Start a conversation
+              </ButtonLink>
+            </Magnetic>
             <a
               href={`mailto:${profile.email}`}
               className="inline-flex min-h-11 items-center font-medium underline decoration-border underline-offset-4 transition-colors hover:text-accent hover:decoration-current"
