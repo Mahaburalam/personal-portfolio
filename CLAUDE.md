@@ -181,7 +181,8 @@ public/brand/   logo kit (SVG lockups with outlined text, PNG avatars) — see �
 public/hero/pipeline/  standalone pipeline visual (owner's mockup: Image → Visual Tokens → Reasoning →
                 Intelligent Output), dark + light: static SVG, PNG (1080p + 4K), CSS-animated SVG, Lottie
                 (markers `intro` 0–45f once, `loop` 45–225f seamless). Generated — never hand-edit; run
-                `pnpm gen:pipeline` (scripts/pipeline-visual/, no deps; PNGs via headless Chrome). Brand/marketing
+                `pnpm gen:pipeline` (scripts/pipeline-visual/, no npm deps; the image panel is `public/hero/street.jpg`,
+                perspective-warped by `warp-photo.py` — needs python3 + Pillow; PNGs via headless Chrome). Brand/marketing
                 assets only: NOT used by the hero, whose DOM signature (§8) stays canonical.
 ```
 Content is currently flat typed TS (`content/*.ts`, incl. `research-visualization.ts` for the homepage
