@@ -21,25 +21,23 @@ export default function ContactPage() {
       </PageHeader>
 
       <Section aria-label="Contact options" className="border-t-0 pt-0 md:pt-0">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
-          <Reveal className="lg:col-span-8">
-            <section
-              aria-labelledby="form-title"
-              className="rounded-lg border bg-card p-5 sm:p-8 lg:p-10"
-            >
-              <h2 id="form-title" className="label-mono mb-8 text-foreground">
-                {formCopy.heading}
-              </h2>
-              <ContactForm />
-            </section>
-          </Reveal>
+        <Reveal>
+          <section
+            aria-labelledby="form-title"
+            className="rounded-lg border bg-card p-5 sm:p-8 lg:p-10"
+          >
+            <h2 id="form-title" className="label-mono mb-8 text-foreground">
+              {formCopy.heading}
+            </h2>
+            <ContactForm />
+          </section>
+        </Reveal>
 
-          <Reveal delay={0.1} className="lg:col-span-4">
-            <aside aria-labelledby="channels-title" className="lg:sticky lg:top-24">
-              <ContactChannels />
-            </aside>
-          </Reveal>
-        </div>
+        <Reveal delay={0.1} className="mt-10">
+          <section aria-labelledby="channels-title">
+            <ContactChannels />
+          </section>
+        </Reveal>
       </Section>
 
       <AgentBrief />

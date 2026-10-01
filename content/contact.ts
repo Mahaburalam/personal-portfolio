@@ -30,9 +30,7 @@ export const formCopy = {
 /** One-line descriptions for the channels panel, keyed by link label. */
 export const channelNotes: Record<string, string> = {
   Email: "Direct line for anything that doesn't fit the form.",
-  GitHub: "Code, experiments and open work.",
-  LinkedIn: "Professional background and experience.",
-  "Google Scholar": "Research profile.",
+  Phone: "Calls for time-sensitive conversations.",
 };
 
 export const agentBriefCopy = {

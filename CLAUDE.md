@@ -95,6 +95,8 @@ in `public/brand/`; never redraw the mark ad hoc — reuse those paths. Do not a
 Nav items are 13px mono uppercase (`font-mono` uppercase, tracking 0.12em). Active route shows an animated indicator (Motion `layoutId`). Minimal — do not add items.
 Mobile: name + menu button → full-screen Motion overlay with the same links + theme toggle. Esc closes,
 focus is trapped while open and returned to the button on close, body scroll locked.
+Footer: logo (links home) left · nav links (mono) center · social icons right (GitHub, LinkedIn, X, Google Scholar;
+`null` hrefs in `lib/site.ts` hide an icon); bottom row © year + name · role.
 
 ## 7. Routes / page architecture
 
@@ -134,7 +136,8 @@ components/
   animations/   reusable Motion wrappers (reveal, stagger) — client leaves only
   three/        ALL Three.js / R3F code, isolated, lazy-loaded
   providers/    theme-provider, motion-provider (MotionConfig reducedMotion="user")
-  ui/           shadcn-style primitives (button, tag) using cn + cva
+  ui/           shadcn-style primitives (button, tag) using cn + cva; social-icon (inline Simple Icons
+                brand SVGs — lucide v1 has no brand icons)
   site-footer.tsx
 lib/            utils.ts (cn), site.ts (profile, nav, links), motion.ts (easeOutExpo, durations)
 content/        projects/ research/ services/ skills/ experience/ (typed data + MDX long-form)
@@ -231,8 +234,8 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 - [ ] 4 Work (selected work ✓, cards ✓, /work list ✓ — case studies via MDX pending)
 - [ ] 5 Research (section ✓, /research list ✓ — detail pages pending)
 - [ ] 6 Services  - [ ] 7 Skills  - [ ] 8 About (homepage previews ✓; full pages pending)
-- [x] 9 Contact (form → server action → Resend, channels, agent brief, availability; needs real
-  contact details + RESEND_API_KEY before launch)
+- [x] 9 Contact (form → server action → Resend, channels, agent brief, availability; needs
+  RESEND_API_KEY before launch)
 - [ ] 10 Motion system (page transitions, reveals, micro-interactions)
 - [ ] 11 Advanced scroll (GSAP, only if needed)
 - [ ] 12 Three.js hero visual (+ research viz if it improves the concept)

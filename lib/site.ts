@@ -18,19 +18,28 @@ export const profile = {
   labels: ["Computer Vision", "VLMs", "Multimodal AI", "AI Systems"],
   current: "Senior Software Engineer",
   researchFocus: "Efficient & Adaptive Vision-Language Systems",
-  // TODO(content): replace with the real public contact email before launch.
-  email: "hello@example.com",
+  email: "mahaburcse@gmail.com",
+  phone: "+88 01783803843",
+  phoneHref: "tel:+8801783803843",
   // TODO(content): production domain.
   url: "https://example.com",
 } as const;
 
-export type SocialLink = { label: string; href: string | null };
+export type SocialIcon = "github" | "linkedin" | "x" | "scholar";
 
-// TODO(content): fill in real profile URLs. `null` links are hidden in the UI.
+export type SocialLink = { label: string; href: string | null; icon: SocialIcon };
+
+// `null` links are hidden in the UI.
 export const socialLinks: SocialLink[] = [
-  { label: "GitHub", href: null },
-  { label: "LinkedIn", href: null },
-  { label: "Google Scholar", href: null },
+  { label: "GitHub", href: "https://github.com/Mahaburalam", icon: "github" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/mahabur-alam/", icon: "linkedin" },
+  // TODO(content): X profile URL.
+  { label: "X", href: null, icon: "x" },
+  {
+    label: "Google Scholar",
+    href: "https://scholar.google.com/citations?user=fVb4LNoAAAAJ&hl=en",
+    icon: "scholar",
+  },
 ];
 
 // TODO(content): Calendly / Cal.com link for a short intro call. `null` hides the button.
@@ -38,5 +47,5 @@ export const bookingUrl: string | null = null;
 
 /** Social links with a real URL — the only ones the UI renders. */
 export const activeSocialLinks = socialLinks.filter(
-  (l): l is { label: string; href: string } => !!l.href,
+  (l): l is SocialLink & { href: string } => !!l.href,
 );
