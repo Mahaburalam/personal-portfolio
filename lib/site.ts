@@ -32,3 +32,11 @@ export const socialLinks: SocialLink[] = [
   { label: "LinkedIn", href: null },
   { label: "Google Scholar", href: null },
 ];
+
+// TODO(content): Calendly / Cal.com link for a short intro call. `null` hides the button.
+export const bookingUrl: string | null = null;
+
+/** Social links with a real URL — the only ones the UI renders. */
+export const activeSocialLinks = socialLinks.filter(
+  (l): l is { label: string; href: string } => !!l.href,
+);

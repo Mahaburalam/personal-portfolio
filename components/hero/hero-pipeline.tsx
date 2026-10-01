@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
+import { easeOutExpo as ease } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -10,7 +11,6 @@ import { cn } from "@/lib/utils";
  */
 
 const GRID = 6;
-const ease = [0.16, 1, 0.3, 1] as const;
 
 // A soft blob drawn as patch intensities — the "image".
 const patches = Array.from({ length: GRID * GRID }, (_, i) => {
@@ -43,7 +43,7 @@ export function HeroPipeline({ className }: { className?: string }) {
 
   return (
     <figure
-      className={cn("bg-card relative rounded-lg border p-5 sm:p-7", className)}
+      className={cn("relative rounded-lg border bg-card p-5 sm:p-7", className)}
       aria-label="Diagram: an image is split into patches, encoded as visual tokens, reasoned over, and turned into an answer."
     >
       <div className="grid grid-cols-2 gap-x-6 gap-y-8" aria-hidden>
@@ -84,7 +84,7 @@ export function HeroPipeline({ className }: { className?: string }) {
             {region.patches.map((p, i) => (
               <motion.span
                 key={`${step}-${p}`}
-                className="label-mono border-signal/60 text-foreground flex h-8 items-center justify-center rounded-sm border sm:h-9"
+                className="label-mono flex h-8 items-center justify-center rounded-sm border border-signal/60 text-foreground sm:h-9"
                 initial={reduce ? false : { opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease, delay: 0.15 + i * 0.06 }}
@@ -95,30 +95,30 @@ export function HeroPipeline({ className }: { className?: string }) {
             {Array.from({ length: 8 }, (_, i) => (
               <span
                 key={i}
-                className="border-border/80 h-8 rounded-sm border border-dashed sm:h-9"
+                className="h-8 rounded-sm border border-dashed border-border/80 sm:h-9"
               />
             ))}
           </div>
-          <p className="label-mono text-muted-foreground/70 mt-3 tracking-normal normal-case">
+          <p className="label-mono mt-3 tracking-normal text-muted-foreground/70 normal-case">
             {region.patches.length} of {GRID * GRID} patches encoded
           </p>
         </div>
 
-        {/* 03 REASONING */}
-        <div>
+        {/* 03 REASONING — hidden on mobile for a simpler visual (CLAUDE.md §8) */}
+        <div className="hidden sm:block">
           <p className={stageLabel}>
             <span className="text-foreground/40">03</span> Reasoning
           </p>
-          <p className="text-muted-foreground mb-3 text-sm">{region.query}</p>
+          <p className="mb-3 text-sm text-muted-foreground">{region.query}</p>
           <div className="space-y-1.5">
             {region.patches.map((p, i) => {
               const w = [0.92, 0.64, 0.41, 0.23][i];
               return (
                 <div key={p} className="flex items-center gap-2">
-                  <span className="label-mono text-muted-foreground w-8">v{p}</span>
-                  <div className="bg-muted h-1.5 flex-1 overflow-hidden rounded-full">
+                  <span className="label-mono w-8 text-muted-foreground">v{p}</span>
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                     <motion.div
-                      className="bg-accent h-full origin-left rounded-full"
+                      className="h-full origin-left rounded-full bg-accent"
                       initial={false}
                       animate={{ scaleX: w }}
                       transition={{
@@ -135,7 +135,7 @@ export function HeroPipeline({ className }: { className?: string }) {
         </div>
 
         {/* 04 OUTPUT */}
-        <div>
+        <div className="col-span-2 sm:col-span-1">
           <p className={stageLabel}>
             <span className="text-foreground/40">04</span> Output
           </p>
@@ -151,14 +151,14 @@ export function HeroPipeline({ className }: { className?: string }) {
               {region.answer}
             </motion.p>
           </AnimatePresence>
-          <p className="label-mono text-muted-foreground mt-4 flex items-center gap-2">
-            <span className="bg-signal size-1.5 rounded-full" />
+          <p className="label-mono mt-4 flex items-center gap-2 text-muted-foreground">
+            <span className="size-1.5 rounded-full bg-signal" />
             Adaptive acquisition
           </p>
         </div>
       </div>
 
-      <figcaption className="label-mono text-muted-foreground mt-7 border-t pt-4">
+      <figcaption className="label-mono mt-7 border-t pt-4 text-muted-foreground">
         Image → Visual tokens → Reasoning → Output
       </figcaption>
     </figure>

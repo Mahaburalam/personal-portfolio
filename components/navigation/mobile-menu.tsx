@@ -5,12 +5,11 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { easeOutExpo as ease } from "@/lib/motion";
 import { navItems } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { isActive } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
-
-const ease = [0.16, 1, 0.3, 1] as const;
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
@@ -76,7 +75,7 @@ export function MobileMenu() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reduce ? 0 : 0.25, ease }}
-            className="bg-background fixed inset-0 z-50 flex flex-col px-5 pt-4 pb-8 sm:px-8"
+            className="fixed inset-0 z-50 flex flex-col bg-background px-5 pt-4 pb-8 sm:px-8"
           >
             <div className="flex h-12 items-center justify-between">
               <span className="font-display text-sm font-semibold tracking-[0.18em] uppercase">
@@ -108,7 +107,7 @@ export function MobileMenu() {
                         onClick={() => setOpen(false)}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "font-display flex items-baseline gap-4 py-2 text-4xl font-semibold tracking-tight",
+                          "flex items-baseline gap-4 py-2 font-display text-4xl font-semibold tracking-tight",
                           active ? "text-foreground" : "text-muted-foreground",
                         )}
                       >

@@ -11,16 +11,16 @@ export function Hero() {
           <p className="label-mono text-muted-foreground">{profile.labels.join(" · ")}</p>
 
           <h1 id="hero-title" className="mt-6">
-            <span className="font-display block text-5xl leading-[0.95] font-semibold tracking-tight uppercase sm:text-6xl xl:text-7xl">
+            <span className="block font-display text-5xl leading-[0.95] font-semibold tracking-tight uppercase sm:text-6xl xl:text-7xl">
               {profile.name}
             </span>
-            <span className="label-mono text-accent mt-5 block text-sm">{profile.role}</span>
+            <span className="label-mono mt-5 block text-sm text-accent">{profile.role}</span>
           </h1>
 
-          <p className="font-display mt-10 max-w-xl text-2xl leading-tight font-medium tracking-tight sm:text-3xl">
+          <p className="mt-10 max-w-xl font-display text-2xl leading-tight font-medium tracking-tight sm:text-3xl">
             {profile.statement}
           </p>
-          <p className="text-muted-foreground mt-4 max-w-lg text-base leading-relaxed sm:text-lg">
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
             {profile.summary}
           </p>
 

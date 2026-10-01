@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Manrope, Sora } from "next/font/google";
 import { SiteHeader } from "@/components/navigation/site-header";
+import { MotionProvider } from "@/components/providers/motion-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SiteFooter } from "@/components/site-footer";
 import { profile } from "@/lib/site";
@@ -36,17 +37,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <a
-            href="#main"
-            className="label-mono bg-foreground text-background sr-only fixed top-3 left-3 z-[100] px-3 py-2 focus:not-sr-only"
-          >
-            Skip to content
-          </a>
-          <SiteHeader />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <SiteFooter />
+          <MotionProvider>
+            <a
+              href="#main"
+              className="label-mono sr-only fixed top-3 left-3 z-[100] bg-foreground px-3 py-2 text-background focus:not-sr-only"
+            >
+              Skip to content
+            </a>
+            <SiteHeader />
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <SiteFooter />
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>

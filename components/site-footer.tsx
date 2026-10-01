@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
-import { navItems, profile, socialLinks } from "@/lib/site";
+import { activeSocialLinks, navItems, profile } from "@/lib/site";
 
 export function SiteFooter() {
-  const links = socialLinks.filter((l): l is { label: string; href: string } => !!l.href);
+  const links = activeSocialLinks;
 
   return (
     <footer className="border-t py-12">
@@ -21,7 +21,7 @@ export function SiteFooter() {
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="label-mono text-muted-foreground hover:text-foreground transition-colors"
+                  className="label-mono text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {item.label}
                 </Link>

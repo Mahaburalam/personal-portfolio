@@ -29,7 +29,7 @@ export function ButtonLink({ variant, arrow, className, children, ...props }: Bu
       {arrow && (
         <ArrowRight
           aria-hidden
-          className="size-4 transition-transform duration-300 ease-(--ease-out-expo) group-hover:translate-x-1"
+          className="size-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-1"
         />
       )}
     </Link>

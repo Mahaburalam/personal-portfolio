@@ -31,7 +31,7 @@ export function NavLinks() {
               {active && (
                 <motion.span
                   layoutId="nav-indicator"
-                  className="bg-accent absolute inset-x-3 bottom-1.5 h-px"
+                  className="absolute inset-x-3 bottom-1.5 h-px bg-accent"
                   transition={{ type: "spring", stiffness: 500, damping: 40 }}
                 />
               )}

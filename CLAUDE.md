@@ -61,8 +61,9 @@ All colors are CSS variables in `app/globals.css`, mapped to Tailwind v4 via `@t
 **Never hardcode hex colors in components** — use `bg-background`, `text-muted-foreground`, `border-border`, etc.
 
 Tokens: `background, foreground, muted, muted-foreground, border, card, card-foreground, accent,
-accent-foreground, signal, ring`.
+accent-foreground, signal, destructive, ring`.
 
+- `destructive` is only for form validation / failure messages (AA on `background` and `card`).
 - **Light** (editorial, warm): warm off-white paper, near-black ink, warm grays, restrained blue accent.
 - **Dark** (technical, premium): near-black, off-white text, cool grays, restrained blue accent, cyan `signal` used sparingly.
 - `signal` (cyan) is only for "live"/AI moments (token highlights, status dots). Glow is rare and subtle.
@@ -115,16 +116,19 @@ The DOM/SVG version (`components/hero/hero-pipeline.tsx`) is permanent and is th
 ```
 components/
   navigation/   site-header, nav-links, mobile-menu, theme-toggle
-  layout/       container, section, section-label
+  layout/       container, section, section-label, section-header (homepage 3|9 rail), page-header
   hero/  work/  research/  services/  skills/  about/  contact/
   animations/   reusable Motion wrappers (reveal, stagger) — client leaves only
   three/        ALL Three.js / R3F code, isolated, lazy-loaded
-  providers/    theme-provider
+  providers/    theme-provider, motion-provider (MotionConfig reducedMotion="user")
   ui/           shadcn-style primitives (button, tag) using cn + cva
   site-footer.tsx
-lib/            utils.ts (cn), site.ts (profile, nav, links)
+lib/            utils.ts (cn), site.ts (profile, nav, links), motion.ts (easeOutExpo, durations)
 content/        projects/ research/ services/ skills/ experience/ (typed data + MDX long-form)
 ```
+Content is currently flat typed TS (`content/*.ts`, incl. `research-visualization.ts` for the homepage
+schematic); it moves into folders when MDX arrives in Phase 4. Research surfaces use the `.bg-grid`
+notebook utility; Work does not.
 
 ## 10. Animation architecture (layered — pick the lowest layer that works)
 
@@ -183,13 +187,16 @@ Results, Challenges, Learnings, Gallery, GitHub/Demo.
 - Strict TypeScript; no `any`. Named exports for components; kebab-case filenames.
 - Tailwind v4 utilities + tokens; compose classes with `cn()` from `lib/utils.ts`; variants with `cva`.
 - Next.js 16: read `node_modules/next/dist/docs/` before using an API (e.g. `params` is a Promise).
-- Prettier (with tailwind plugin) + ESLint must pass. `pnpm` only.
+- Prettier (with tailwind plugin, `tailwindStylesheet` → `app/globals.css`) + ESLint must pass. `pnpm` only.
+  `*.md` and `pnpm-lock.yaml` are in `.prettierignore` (Prettier breaks this file's numbered lists).
 
 ## 18. Dependency rules
 
 Current: next, react, tailwindcss, next-themes, lucide-react, motion, clsx, tailwind-merge,
-class-variance-authority, prettier(+tailwind plugin).
-Planned by phase: MDX (Phase 4), zod + react-hook-form (Phase 9), gsap (Phase 11, only if justified),
+class-variance-authority, prettier(+tailwind plugin), zod (contact form validation, Phase 9).
+react-hook-form was dropped: React 19 `useActionState` + native constraints cover the contact form.
+Contact email goes through Resend's REST API via `fetch` (no SDK); env vars in `.env.example`.
+Planned by phase: MDX (Phase 4), gsap (Phase 11, only if justified),
 three + @react-three/fiber + @react-three/drei (Phase 12).
 Before adding anything: does the stack already solve it? Is it lightweight? Does it duplicate something? Record it here.
 
@@ -206,9 +213,12 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 - [x] 1 Foundation (Next, TS, Tailwind, tokens, fonts, theme, lint/prettier, CLAUDE.md)
 - [x] 2 Core UI (nav, theme toggle, layout, typography, buttons, containers)
 - [x] 3 Hero (DOM pipeline visual) + Currently
-- [ ] 4 Work (selected work, cards, /work, case studies via MDX)
-- [ ] 5 Research (section, /research, detail pages)
-- [ ] 6 Services  - [ ] 7 Skills  - [ ] 8 About  - [ ] 9 Contact
+- [x] Homepage: all §8 sections in place (previews for Phases 4–9, research schematic, reveal/stagger)
+- [ ] 4 Work (selected work ✓, cards ✓, /work list ✓ — case studies via MDX pending)
+- [ ] 5 Research (section ✓, /research list ✓ — detail pages pending)
+- [ ] 6 Services  - [ ] 7 Skills  - [ ] 8 About (homepage previews ✓; full pages pending)
+- [x] 9 Contact (form → server action → Resend, channels, agent brief, availability; needs real
+  contact details + RESEND_API_KEY before launch)
 - [ ] 10 Motion system (page transitions, reveals, micro-interactions)
 - [ ] 11 Advanced scroll (GSAP, only if needed)
 - [ ] 12 Three.js hero visual (+ research viz if it improves the concept)
