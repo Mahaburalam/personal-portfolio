@@ -14,7 +14,7 @@ type SectionHeaderProps = {
   className?: string;
 };
 
-/** Homepage section header: mono label in a 3-col rail, display heading in the other 9. */
+/** Section header for the homepage and long inner pages: mono label in a 3-col rail, display heading in the other 9. */
 export function SectionHeader({
   id,
   label,

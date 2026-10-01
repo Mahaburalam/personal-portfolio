@@ -18,7 +18,7 @@ export function SkillsPreview() {
 
       <Stagger
         as="ol"
-        className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 md:mt-20 lg:grid-cols-4"
+        className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 md:mt-20 lg:grid-cols-3"
       >
         {skillCategories.map((category, i) => {
           const highlights = [

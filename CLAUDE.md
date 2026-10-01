@@ -140,11 +140,11 @@ The DOM/SVG version (`components/hero/hero-pipeline.tsx`) is permanent and is th
 ```
 components/
   navigation/   site-header, nav-links, mobile-menu, theme-toggle, back-to-top
-  layout/       container, section, section-label, section-header (homepage 3|9 rail), page-header
+  layout/       container, section, section-label, section-header (3|9 rail: homepage + long inner pages), page-header
   hero/  work/  research/  services/  about/  contact/
   skills/       skills-preview (homepage teaser) · skills-ecosystem (server, /skills) → skills-graph (client:
                 hover/focus state + SVG traces) · skill-category · skill-chip · tech-icon · research-direction ·
-                patch-scan (decorative CV motif, lg)
+                patch-scan (decorative CV motif, xl)
   animations/   reusable Motion wrappers (reveal, stagger, magnetic) — client leaves only
   intro/        first-load intro overlay (server markup) + its inline gating script
   signal/       homepage signal band (server wrapper + client SVG strands)
@@ -154,7 +154,7 @@ components/
                 brand SVGs — lucide v1 has no brand icons)
   site-footer.tsx
 lib/            utils.ts (cn), site.ts (profile, nav, links), motion.ts (easeOutExpo, durations)
-content/        projects/ research/ services/ skills/ experience/ (typed data + MDX long-form)
+content/        projects/ research/ services/ skills/ experience/ about/ credentials/ (typed data + MDX long-form)
 public/brand/   logo kit (SVG lockups with outlined text, PNG avatars) — see §6
 ```
 Content is currently flat typed TS (`content/*.ts`, incl. `research-visualization.ts` for the homepage
@@ -162,12 +162,24 @@ schematic); it moves into folders when MDX arrives in Phase 4. Research surfaces
 notebook utility; Work does not.
 
 **Skills (`/skills`).** 8 categories in `content/skills.ts`, laid out AI-first (owner's sketch): AI/ML → Computer
-Vision · Multimodal AI · AI Research (+ research-direction strip) → Software Engineering (foundation) → Frontend ·
-Database · Tools. Cards are numbered in visual order. Hierarchy comes from `tier` (primary / secondary / emerging →
+Vision · Multimodal AI · AI Research (+ research-direction strip) → Software Engineering (foundation) → Backend ·
+Database & Data · Frontend · Tools (owner's priority order; Backend is the main engineering focus and primary tier).
+Cards are numbered in visual order. Hierarchy comes from `tier` (primary / secondary / emerging →
 size, frame, the emerging ones get `.bg-grid`) and a visible neutral `stance` label ("Focused on", "Exploring"…) —
 never percentages, bars, levels or "expert". `skillLinks` drives both the traces and hover emphasis. The research
 direction (CV → Multimodal → VLMs → Embodied AI → World Models) is marked now / next / horizon: a direction, not a
 claim. The homepage shows only a compact teaser of the categories.
+
+**About (`/about`).** A narrative, not a resume. Copy in `content/about.ts`, roles in `content/experience.ts`, and
+education / certifications / publications in `content/credentials.ts`. Sections live in `components/about/` and
+are numbered in visual order on the 3|9 rail (`SectionHeader`). The hero holds the page's only `h1` (label
+`About / 05`, nav order) and a trajectory chain (Software Eng → AI Eng → CV → AI Research). Then: 01 Journey (a
+scroll-drawn line, the only new client leaf `journey-progress.tsx`) · 02 Experience · 03 Research & AI (`.bg-grid`
+notebook: ongoing lines with `StatusBadge`, interests, a status legend and publications only when real) ·
+04 Education & learning · 05 Built along the way (evidence, links into /work) · 06 Currently exploring (now / next /
+horizon + current status strip) · 07 How I work · 08 `ContactCta` (props: `index`, `intro`, `secondary`). Unknown
+facts (employer, dates, degree…) are `null` with `TODO(content)` and simply not rendered — no visible placeholders.
+The page emits `ProfilePage` → `Person` JSON-LD from verified fields only.
 
 ## 10. Animation architecture (layered — pick the lowest layer that works)
 
@@ -194,11 +206,11 @@ toggle, Back-to-Top. Small intentional targets only — never nav text links or 
 reveal, a few travelling highlights) plus a small rAF loop that writes attributes directly (no re-renders): strand
 drift, the scan cursor, tokens flowing out of the image, and the active output word. Paused offscreen / in hidden tabs; static first frame under reduced motion. Not a GSAP or WebGL case.
 
-**Skills graph.** `components/skills/skills-graph.tsx`: on lg, an `aria-hidden` SVG layer behind the cards draws
+**Skills graph.** `components/skills/skills-graph.tsx`: on xl (≥1280px), an `aria-hidden` SVG layer behind the cards draws
 chamfered circuit traces between measured card boxes (`offset*`, so transforms don't skew them; re-measured by a
 ResizeObserver). CSS only — traces draw in once (reusing `signal-draw`), then faint `signal` pulses loop
 (`signal-pulse`), paused offscreen via `data-skills-paused`; no rAF. Hover / focus / tap lifts a card, accents its
-traces and chips, dims unrelated cards. Below lg: no SVG, a static dashed spine. Reduced motion / no JS → static.
+traces and chips, dims unrelated cards (xl). Below xl: no SVG — 2 columns on md–lg, a static dashed spine on mobile. Reduced motion / no JS → static.
 
 Timing: UI transitions 200–500ms; easing token `--ease-out-expo` / Motion `[0.16, 1, 0.3, 1]`.
 Never animate every element. Every animation respects `prefers-reduced-motion` (use `useReducedMotion` from
@@ -238,7 +250,10 @@ AI-native extras (`/llms.txt`, `/api/*`) only after core is stable.
 
 Content lives in `content/` as typed TS data (short) and MDX (long-form case studies / research), never
 hardcoded inside JSX sections. **Never fabricate** metrics, clients, publications, awards, results, user counts,
-technologies or titles. Unknown data → placeholder marked `TODO(content)` and ask the owner.
+technologies or titles. Unknown data → placeholder marked `TODO(content)` and ask the owner. Profile facts
+(employers, dates, degrees, credentials) that are unknown stay `null` and the UI omits them; lists with no
+verified entries (e.g. `publications`) render nothing. Interests and directions are worded as such
+("exploring", "next", "horizon") — never as results or expertise.
 Research status must be one of: `idea | concept | experiment | ongoing | preprint | submitted | published`
 and must be accurate (all current items: `ongoing` until the owner confirms otherwise).
 Case study structure: Overview, Problem, Context, My Role, Approach, Architecture, Technology, Implementation,
@@ -248,6 +263,8 @@ Results, Challenges, Learnings, Gallery, GitHub/Demo.
 
 - Strict TypeScript; no `any`. Named exports for components; kebab-case filenames.
 - Tailwind v4 utilities + tokens; compose classes with `cn()` from `lib/utils.ts`; variants with `cva`.
+  Custom utilities that collide with Tailwind prefixes (e.g. `bg-grid`) must be registered in `cn`'s
+  `extendTailwindMerge` config, or tailwind-merge silently drops them.
 - Next.js 16: read `node_modules/next/dist/docs/` before using an API (e.g. `params` is a Promise).
 - Prettier (with tailwind plugin, `tailwindStylesheet` → `app/globals.css`) + ESLint must pass. `pnpm` only.
   `*.md` and `pnpm-lock.yaml` are in `.prettierignore` (Prettier breaks this file's numbered lists).
@@ -280,7 +297,9 @@ Before adding anything: does the stack already solve it? Is it lightweight? Does
 - [x] Homepage: all §8 sections in place (previews for Phases 4–9, research schematic, reveal/stagger)
 - [ ] 4 Work (selected work ✓, cards ✓, /work list ✓ — case studies via MDX pending)
 - [ ] 5 Research (section ✓, /research list ✓ — detail pages pending)
-- [ ] 6 Services  - [ ] 8 About (homepage previews ✓; full pages pending)
+- [ ] 6 Services
+- [ ] 8 About (homepage previews ✓, /about narrative page ✓ — owner facts pending: employers, dates, degree,
+  past roles; principles copy review)
 - [ ] 7 Skills (homepage teaser ✓, /skills animated ecosystem ✓ — owner review of descriptions pending)
 - [x] 9 Contact (form → server action → Resend, honeypot + 3s time-trap anti-spam, channels, agent
   brief, availability; needs RESEND_API_KEY + CONTACT_TO_EMAIL env vars before launch)

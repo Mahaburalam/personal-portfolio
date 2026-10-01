@@ -13,14 +13,14 @@ const cells = Array.from({ length: COLS * ROWS }, (_, i) => {
 });
 
 /**
- * Decorative CV motif for the Computer Vision card (lg only): an image split into patches,
+ * Decorative CV motif for the Computer Vision card (xl only): an image split into patches,
  * a scan sweeping across, the salient patches kept as visual tokens — the site's
  * IMAGE → PATCHES → TOKENS signature. Animation is gated by the skills graph's
  * `data-skills` state (globals.css); static without it.
  */
 export function PatchScan() {
   return (
-    <div aria-hidden className="hidden lg:block">
+    <div aria-hidden className="hidden xl:block">
       <div className="grid grid-cols-16 gap-[3px]">
         {cells.map((cell, i) => (
           <span

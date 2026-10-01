@@ -7,13 +7,21 @@ import { ButtonLink } from "@/components/ui/button";
 import { contactCopy } from "@/content/contact";
 import { activeSocialLinks, profile } from "@/lib/site";
 
-export function ContactCta() {
+type ContactCtaProps = {
+  /** Section number in the page's own sequence. */
+  index?: number;
+  intro?: string;
+  /** Optional second action next to the primary button, e.g. "View work". */
+  secondary?: { href: string; label: string };
+};
+
+export function ContactCta({ index = 8, intro = contactCopy.intro, secondary }: ContactCtaProps) {
   const links = activeSocialLinks;
 
   return (
     <Section aria-labelledby="contact-title" className="py-24 md:py-36">
       <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-        <SectionLabel index={8} className="lg:col-span-3 lg:pt-4">
+        <SectionLabel index={index} className="lg:col-span-3 lg:pt-4">
           Contact
         </SectionLabel>
         <div className="lg:col-span-9">
@@ -24,7 +32,7 @@ export function ContactCta() {
             {contactCopy.title}
           </h2>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {contactCopy.intro}
+            {intro}
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -33,6 +41,11 @@ export function ContactCta() {
                 Start a conversation
               </ButtonLink>
             </Magnetic>
+            {secondary && (
+              <ButtonLink href={secondary.href} variant="ghost" arrow>
+                {secondary.label}
+              </ButtonLink>
+            )}
             <a
               href={`mailto:${profile.email}`}
               className="inline-flex min-h-11 items-center font-medium underline decoration-border underline-offset-4 transition-colors hover:text-accent hover:decoration-current"

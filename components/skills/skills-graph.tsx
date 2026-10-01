@@ -16,7 +16,7 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 export type GraphNode = {
   id: string;
-  /** Grid placement (lg 12-col layout lives in skills-ecosystem.tsx). */
+  /** Grid placement (xl 12-col layout lives in skills-ecosystem.tsx). */
   className: string;
   /** Server-rendered card. */
   content: ReactNode;
@@ -30,21 +30,21 @@ type SkillsGraphProps = {
 type Box = { x: number; y: number; w: number; h: number };
 type Point = { x: number; y: number };
 
-const LG = "(min-width: 1024px)";
+const XL = "(min-width: 1280px)";
 /** Corner cut of each trace bend — the circuit-board look. */
 const CHAMFER = 12;
 
-function subscribeLg(onChange: () => void) {
-  const mq = matchMedia(LG);
+function subscribeXl(onChange: () => void) {
+  const mq = matchMedia(XL);
   mq.addEventListener("change", onChange);
   return () => mq.removeEventListener("change", onChange);
 }
 
-/** Traces only on lg; hydration-safe (server and first client render: false). */
-function useIsLg() {
+/** Traces only on xl; hydration-safe (server and first client render: false). */
+function useIsXl() {
   return useSyncExternalStore(
-    subscribeLg,
-    () => matchMedia(LG).matches,
+    subscribeXl,
+    () => matchMedia(XL).matches,
     () => false,
   );
 }
@@ -89,9 +89,9 @@ function route(a: Box, b: Box): { d: string; from: Point; to: Point } {
 }
 
 /**
- * Skill ecosystem (CLAUDE.md §10 "Skills graph"): cards in a grid, connected on lg by an
+ * Skill ecosystem (CLAUDE.md §10 "Skills graph"): cards in a grid, connected on xl by an
  * aria-hidden SVG trace layer. Hover / focus / tap activates a card: it lifts, its traces and
- * chips light up, related cards get a firmer border and unrelated ones dim (lg). Animation is
+ * chips light up, related cards get a firmer border and unrelated ones dim (xl). Animation is
  * CSS gated by `data-skills` (globals.css); none under reduced motion or without JS.
  */
 export function SkillsGraph({ nodes, links }: SkillsGraphProps) {
@@ -100,7 +100,7 @@ export function SkillsGraph({ nodes, links }: SkillsGraphProps) {
   const [active, setActive] = useState<string | null>(null);
   const [layout, setLayout] = useState<{ w: number; h: number; boxes: Record<string, Box> }>();
   const reduce = useReducedMotion();
-  const isLg = useIsLg();
+  const isXl = useIsXl();
 
   const neighbours = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -113,10 +113,10 @@ export function SkillsGraph({ nodes, links }: SkillsGraphProps) {
     return map;
   }, [links]);
 
-  // Measure card boxes on lg; the root's size changes whenever any card reflows.
+  // Measure card boxes on xl; the root's size changes whenever any card reflows.
   useEffect(() => {
     const root = rootRef.current;
-    if (!root || !isLg) return;
+    if (!root || !isXl) return;
     const measure = () => {
       const boxes: Record<string, Box> = {};
       for (const [id, el] of shells.current) boxes[id] = boxOf(el, root);
@@ -125,7 +125,7 @@ export function SkillsGraph({ nodes, links }: SkillsGraphProps) {
     const ro = new ResizeObserver(measure);
     ro.observe(root);
     return () => ro.disconnect();
-  }, [isLg]);
+  }, [isXl]);
 
   // armed → play once in view; pause the looping pulses whenever offscreen.
   useEffect(() => {
@@ -193,7 +193,7 @@ export function SkillsGraph({ nodes, links }: SkillsGraphProps) {
     >
       <Stagger
         as="ol"
-        className="grid gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-16"
+        className="grid gap-6 md:grid-cols-2 md:gap-8 xl:grid-cols-12 xl:gap-x-10 xl:gap-y-16"
       >
         {nodes.map((node) => {
           const isActive = active === node.id;
@@ -212,7 +212,7 @@ export function SkillsGraph({ nodes, links }: SkillsGraphProps) {
                   if (!e.currentTarget.contains(e.relatedTarget)) release(node.id);
                 }}
                 className={cn(
-                  "group/card relative h-full transition-opacity duration-300 ease-out-expo lg:data-[dim=true]:opacity-55",
+                  "group/card relative h-full transition-opacity duration-300 ease-out-expo xl:data-[dim=true]:opacity-55",
                   // Mobile spine port, centered on the dashed line
                   "max-md:before:absolute max-md:before:top-8 max-md:before:-left-5 max-md:before:size-2.5 max-md:before:rounded-full max-md:before:border max-md:before:border-foreground/40 max-md:before:bg-background",
                 )}
@@ -224,7 +224,7 @@ export function SkillsGraph({ nodes, links }: SkillsGraphProps) {
         })}
       </Stagger>
 
-      {isLg && layout && (
+      {isXl && layout && (
         <svg
           aria-hidden
           width={layout.w}

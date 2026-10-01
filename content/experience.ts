@@ -38,12 +38,18 @@ export type Role = {
   org: string | null;
   period: string | null;
   current: boolean;
+  /** Optional details for /about — only rendered when set. */
+  location?: string;
+  summary?: string;
+  highlights?: string[];
 };
 
+/** Most recent first. */
 export const roles: Role[] = [
   {
     title: "Senior Software Engineer",
-    // TODO(content): organization and period — add only real values.
+    // TODO(content): organization, period, location, summary and highlights — add only real values.
+    // Earlier roles go below this one.
     org: null,
     period: null,
     current: true,

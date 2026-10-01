@@ -3,12 +3,12 @@ export type TechIcon =
   | "javascript"
   | "typescript"
   | "nodedotjs"
+  | "nestjs"
   | "express"
   | "react"
   | "nextdotjs"
   | "tailwindcss"
-  | "html5"
-  | "css"
+  | "shadcnui"
   | "postgresql"
   | "mysql"
   | "mongodb"
@@ -126,34 +126,30 @@ export const skillCategories: SkillCategory[] = [
     title: "Software Engineering",
     stance: "Building with",
     tier: "primary",
-    description: "Building scalable production systems and backend services — the foundation.",
+    description: "Building scalable production systems — the foundation everything else runs on.",
     skills: [
       { name: "JavaScript", icon: "javascript" },
       { name: "TypeScript", icon: "typescript", featured: true },
-      { name: "Node.js", icon: "nodedotjs", featured: true },
-      { name: "Express.js", icon: "express" },
-      { name: "REST APIs" },
-      { name: "Backend Development" },
-      { name: "API Design" },
       { name: "System Design" },
       { name: "Software Architecture" },
-      { name: "Microservices" },
       { name: "Web Application Development" },
     ],
   },
+  // The four below sit under Software Engineering in the owner's priority order.
   {
-    id: "frontend",
-    title: "Frontend",
-    stance: "Working with",
-    tier: "secondary",
-    description: "Interfaces for the systems I build, including this site.",
+    id: "backend",
+    title: "Backend",
+    stance: "Building with",
+    tier: "primary",
+    description: "My main engineering focus: APIs and backend services for production systems.",
     skills: [
-      { name: "React", icon: "react" },
-      { name: "Next.js", icon: "nextdotjs" },
-      { name: "Tailwind CSS", icon: "tailwindcss" },
-      { name: "HTML5", icon: "html5" },
-      { name: "CSS3", icon: "css" },
-      { name: "Responsive Web Design" },
+      { name: "Node.js", icon: "nodedotjs", featured: true },
+      { name: "NestJS", icon: "nestjs", featured: true },
+      { name: "Express.js", icon: "express" },
+      { name: "REST APIs" },
+      { name: "API Design" },
+      { name: "Backend Development" },
+      { name: "Microservices" },
     ],
   },
   {
@@ -172,12 +168,26 @@ export const skillCategories: SkillCategory[] = [
     ],
   },
   {
+    id: "frontend",
+    title: "Frontend",
+    stance: "Working with",
+    tier: "secondary",
+    description: "Interfaces for the systems I build, including this site.",
+    skills: [
+      { name: "React", icon: "react" },
+      { name: "Next.js", icon: "nextdotjs" },
+      { name: "Tailwind CSS", icon: "tailwindcss" },
+      { name: "shadcn/ui", icon: "shadcnui" },
+      { name: "Responsive Web Design" },
+    ],
+  },
+  {
     id: "tools",
     title: "Tools & Engineering",
     stance: "Working with",
     tier: "secondary",
     description: "The everyday toolchain behind shipping and experimenting.",
-    // REST APIs lives under Software Engineering only (it was listed in both).
+    // REST APIs lives under Backend only (it was listed in both).
     skills: [
       { name: "Git", icon: "git" },
       { name: "GitHub", icon: "github" },
@@ -205,9 +215,11 @@ export const skillLinks: [string, string][] = [
   ["research", DIRECTION_ID],
   ["computer-vision", "software-engineering"],
   [DIRECTION_ID, "software-engineering"],
-  ["software-engineering", "frontend"],
+  ["software-engineering", "backend"],
   ["software-engineering", "data"],
+  ["software-engineering", "frontend"],
   ["software-engineering", "tools"],
+  ["backend", "data"],
 ];
 
 export type DirectionStep = { label: string; phase: "now" | "next" | "horizon" };
