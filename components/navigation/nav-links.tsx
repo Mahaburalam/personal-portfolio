@@ -23,7 +23,7 @@ export function NavLinks() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "label-mono relative block px-3 py-3 transition-colors",
+                "relative block px-2.5 py-3 font-mono text-[0.8125rem] tracking-[0.12em] uppercase transition-colors xl:px-3",
                 active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
               )}
             >
@@ -31,7 +31,7 @@ export function NavLinks() {
               {active && (
                 <motion.span
                   layoutId="nav-indicator"
-                  className="absolute inset-x-3 bottom-1.5 h-px bg-accent"
+                  className="absolute inset-x-2.5 bottom-1.5 h-px bg-accent xl:inset-x-3"
                   transition={{ type: "spring", stiffness: 500, damping: 40 }}
                 />
               )}

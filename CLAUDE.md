@@ -76,13 +76,15 @@ Light is designed on its own — never an inversion of dark.
 is **off**; instead a fast (150ms) color transition is applied to `body`. Supports Dark / Light / System.
 Toggle flips the *visible* theme on every click (light ↔ dark) and shows the resolved mode; when the
 chosen theme matches the OS preference it stores `system` instead, so System stays supported without
-"dead" clicks (the old light → dark → system cycle often produced no visible change). `<html suppressHydrationWarning>`.
+"dead" clicks (the old light → dark → system cycle often produced no visible change).
+Switching uses a View Transitions circular reveal from the toggle (500ms, easeOutExpo) plus a Motion
+sun/moon icon swap; instant when the API is unsupported or reduced motion is on. `<html suppressHydrationWarning>`.
 
 ## 6. Navigation
 
 Desktop: bracket-monogram logo `[MA·]` (`components/navigation/logo.tsx`, inline SVG, theme tokens,
 links home, `aria-label` with the full name) left; right: `WORK  RESEARCH  SERVICE  SKILL  ABOUT  CONTACT  ◐`.
-Active route shows an animated indicator (Motion `layoutId`). Minimal — do not add items.
+Nav items are 13px mono uppercase (`font-mono` uppercase, tracking 0.12em). Active route shows an animated indicator (Motion `layoutId`). Minimal — do not add items.
 Mobile: name + menu button → full-screen Motion overlay with the same links + theme toggle. Esc closes,
 focus is trapped while open and returned to the button on close, body scroll locked.
 
